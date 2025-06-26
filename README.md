@@ -15,17 +15,6 @@ A modern, interactive component design and prototyping tool. Boop allows you to 
 - **Real-time Property Editing**: Live configuration of component props with instant visual feedback
 - **Component Inspector**: Detailed property panel for fine-tuning component behavior
 
-## 🛠️ Tech Stack
-
-- **Framework**: [Next.js 15](https://nextjs.org/) with App Router
-- **Language**: TypeScript
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **UI Components**: [Shadcn/ui](https://ui.shadcn.com/) with [Radix UI](https://www.radix-ui.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Form Handling**: React Hook Form with Zod validation
-- **Toast Notifications**: [Sonner](https://sonner.emilkowal.ski/)
-- **Themes**: [next-themes](https://github.com/pacocoursey/next-themes)
-
 ## 🚀 Getting Started
 
 ### Prerequisites
