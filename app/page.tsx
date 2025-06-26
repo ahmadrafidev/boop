@@ -307,8 +307,6 @@ export default function PrototypeDesignTool() {
     return <div className="h-screen bg-background" />
   }
 
-
-
   const toggleCodePanel = () => {
     setIsCollapsed(!isCollapsed)
   }
@@ -489,9 +487,6 @@ export default function PrototypeDesignTool() {
       {leftPanelOpen && (
         <div className="w-80 border-r bg-muted/30 flex flex-col">
           <div className="p-4 border-b bg-background/95 backdrop-blur">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium">Components</h3>
-            </div>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input

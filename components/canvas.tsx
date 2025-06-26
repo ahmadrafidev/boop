@@ -364,7 +364,7 @@ export function Canvas({
                     Component
                   </Badge>
                 </div>
-                <p className="text-lg text-muted-foreground max-w-2xl">
+                <p className="text-base text-muted-foreground max-w-2xl">
                   {selectedComponent.description}
                 </p>
               </div>

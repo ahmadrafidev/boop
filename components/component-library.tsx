@@ -36,10 +36,9 @@ export function ComponentLibrary({
   onSelectComponent,
   onAddToCanvas,
 }: ComponentLibraryProps) {
+  
   const filteredComponents = components.filter((comp) => 
-    comp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    comp.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    comp.type.toLowerCase().includes(searchQuery.toLowerCase())
+    comp.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const handleAddToCanvas = (component: ComponentDefinition, e: React.MouseEvent) => {
@@ -68,7 +67,7 @@ export function ComponentLibrary({
     <div className="flex-1 flex flex-col">
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
-          <div className="mb-4">
+          <div className="mb-3">
             <h3 className="text-sm font-medium mb-1">Components</h3>
             <p className="text-xs text-muted-foreground">
               {filteredComponents.length} of {components.length} components
