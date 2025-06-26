@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ComponentLibrary } from "@/components/component-library"
 import { Canvas } from "@/components/canvas"
 import { PropertiesPanel } from "@/components/properties-panel"
@@ -126,8 +126,16 @@ export default function PrototypeDesignTool() {
   const [searchQuery, setSearchQuery] = useState("")
   const [leftPanelOpen, setLeftPanelOpen] = useState(true)
   const [rightPanelOpen, setRightPanelOpen] = useState(true)
+  const [previewProps, setPreviewProps] = useState<Record<string, any>>({})
   const isMobile = useIsMobile()
   const [isCollapsed, setIsCollapsed] = useState(false)
+
+  // Initialize preview props when selected component changes
+  useEffect(() => {
+    if (selectedComponent) {
+      setPreviewProps(selectedComponent.defaultProps)
+    }
+  }, [selectedComponent])
 
   const toggleCodePanel = () => {
     setIsCollapsed(!isCollapsed)
@@ -161,6 +169,10 @@ export default function PrototypeDesignTool() {
     }
   }
 
+  const updatePreviewProps = (newProps: Record<string, any>) => {
+    setPreviewProps(newProps)
+  }
+
   const updateInstancePosition = (instanceId: string, position: { x: number; y: number }) => {
     setCanvasComponents((prev) => prev.map((comp) => (comp.id === instanceId ? { ...comp, position } : comp)))
     if (selectedInstance?.id === instanceId) {
@@ -171,6 +183,14 @@ export default function PrototypeDesignTool() {
   const clearCanvas = () => {
     setCanvasComponents([])
     setSelectedInstance(null)
+  }
+
+  // Update preview props when component selection changes
+  const handleComponentSelect = (component: ComponentDefinition | null) => {
+    setSelectedComponent(component)
+    if (component) {
+      setPreviewProps(component.defaultProps)
+    }
   }
 
   const currentComponentDef = selectedInstance
@@ -199,7 +219,7 @@ export default function PrototypeDesignTool() {
           components={componentDefinitions}
           searchQuery={searchQuery}
           selectedComponent={selectedComponent}
-          onSelectComponent={setSelectedComponent}
+          onSelectComponent={handleComponentSelect}
           onAddToCanvas={addComponentToCanvas}
         />
       </div>
@@ -213,6 +233,8 @@ export default function PrototypeDesignTool() {
             componentDef={currentComponentDef}
             instance={selectedInstance}
             onUpdateProps={updateInstanceProps}
+            previewProps={previewProps}
+            onPreviewPropsChange={updatePreviewProps}
           />
         </div>
       </div>
@@ -247,6 +269,7 @@ export default function PrototypeDesignTool() {
                 onUpdatePosition={updateInstancePosition}
                 onClearCanvas={clearCanvas}
                 onAddToCanvas={addComponentToCanvas}
+                previewProps={previewProps}
               />
             </div>
 
@@ -257,6 +280,7 @@ export default function PrototypeDesignTool() {
                   instance={selectedInstance}
                   isCollapsed={isCollapsed}
                   onToggleCollapse={toggleCodePanel}
+                  previewProps={previewProps}
                 />
               </div>
             )}
@@ -318,7 +342,7 @@ export default function PrototypeDesignTool() {
             components={componentDefinitions}
             searchQuery={searchQuery}
             selectedComponent={selectedComponent}
-            onSelectComponent={setSelectedComponent}
+            onSelectComponent={handleComponentSelect}
             onAddToCanvas={addComponentToCanvas}
           />
         </div>
@@ -350,6 +374,7 @@ export default function PrototypeDesignTool() {
               onUpdatePosition={updateInstancePosition}
               onClearCanvas={clearCanvas}
               onAddToCanvas={addComponentToCanvas}
+              previewProps={previewProps}
             />
           </div>
 
@@ -361,6 +386,7 @@ export default function PrototypeDesignTool() {
                 instance={selectedInstance}
                 isCollapsed={isCollapsed}
                 onToggleCollapse={toggleCodePanel}
+                previewProps={previewProps}
               />
             </div>
           )}
@@ -384,6 +410,8 @@ export default function PrototypeDesignTool() {
               componentDef={currentComponentDef}
               instance={selectedInstance}
               onUpdateProps={updateInstanceProps}
+              previewProps={previewProps}
+              onPreviewPropsChange={updatePreviewProps}
             />
           </div>
         </div>

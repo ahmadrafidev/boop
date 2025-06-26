@@ -11,14 +11,15 @@ interface CodePanelProps {
   instance: ComponentInstance | null
   isCollapsed: boolean
   onToggleCollapse: () => void
+  previewProps?: Record<string, any>
 }
 
-export function CodePanel({ component, instance, isCollapsed, onToggleCollapse }: CodePanelProps) {
+export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, previewProps }: CodePanelProps) {
   const [copied, setCopied] = useState(false)
 
   if (!component) return null
 
-  const props = instance?.props || component.defaultProps
+  const props = instance?.props || previewProps || component.defaultProps
 
   const generateCode = () => {
     const allProps = Object.entries(props).filter(([key, value]) => {

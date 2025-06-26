@@ -14,10 +14,12 @@ interface CanvasProps {
   selectedComponent: ComponentDefinition | null
   selectedInstance: ComponentInstance | null
   canvasComponents: ComponentInstance[]
+  componentDefinitions: ComponentDefinition[]
   onSelectInstance: (instance: ComponentInstance | null) => void
   onUpdatePosition: (instanceId: string, position: { x: number; y: number }) => void
   onClearCanvas: () => void
   onAddToCanvas: (componentDef: ComponentDefinition) => void
+  previewProps?: Record<string, any>
 }
 
 function renderComponent(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
@@ -106,10 +108,12 @@ export function Canvas({
   selectedComponent,
   selectedInstance,
   canvasComponents,
+  componentDefinitions,
   onSelectInstance,
   onUpdatePosition,
   onClearCanvas,
   onAddToCanvas,
+  previewProps,
 }: CanvasProps) {
   const handleDragStart = (e: React.DragEvent, instance: ComponentInstance) => {
     e.dataTransfer.setData("text/plain", instance.id)
@@ -137,67 +141,7 @@ export function Canvas({
     const componentType = e.dataTransfer.getData("component/type")
     if (componentType) {
       // Find the component definition and add it to canvas
-      const componentDef = [
-        {
-          type: "Button",
-          name: "Button",
-          icon: "Square",
-          description: "Interact with the component and modify its props using the inspector",
-          defaultProps: { children: "Button", variant: "default", size: "default" },
-          propTypes: {
-            children: { type: "string" },
-            variant: { type: "select", options: ["default", "destructive", "outline", "secondary", "ghost", "link"] },
-            size: { type: "select", options: ["default", "sm", "lg", "icon"] },
-          },
-        },
-        {
-          type: "Card",
-          name: "Card",
-          icon: "CreditCard",
-          description: "A flexible container for grouping and displaying content in a clear, concise format",
-          defaultProps: { title: "Card Title", content: "Card content goes here", variant: "default" },
-          propTypes: {
-            title: { type: "string" },
-            content: { type: "string" },
-            variant: { type: "select", options: ["default", "outline"] },
-          },
-        },
-        {
-          type: "Badge",
-          name: "Badge",
-          icon: "Tag",
-          description: "Small status descriptors for UI elements, perfect for labels and indicators",
-          defaultProps: { children: "Badge", variant: "default" },
-          propTypes: {
-            children: { type: "string" },
-            variant: { type: "select", options: ["default", "secondary", "destructive", "outline"] },
-          },
-        },
-        {
-          type: "Input",
-          name: "Input",
-          icon: "Type",
-          description: "Text input field for collecting user data with various input types and states",
-          defaultProps: { placeholder: "Enter text...", type: "text", disabled: false },
-          propTypes: {
-            placeholder: { type: "string" },
-            type: { type: "select", options: ["text", "email", "password", "number"] },
-            disabled: { type: "boolean" },
-          },
-        },
-        {
-          type: "Alert",
-          name: "Alert",
-          icon: "AlertCircle",
-          description: "Display important messages and notifications to users with different severity levels",
-          defaultProps: { title: "Alert Title", description: "This is an alert description", variant: "default" },
-          propTypes: {
-            title: { type: "string" },
-            description: { type: "string" },
-            variant: { type: "select", options: ["default", "destructive"] },
-          },
-        },
-      ].find(def => def.type === componentType)
+      const componentDef = componentDefinitions.find(def => def.type === componentType)
       
       if (componentDef) {
         onAddToCanvas(componentDef)
@@ -275,7 +219,7 @@ export function Canvas({
                       {
                         id: "preview",
                         type: selectedComponent.type,
-                        props: selectedComponent.defaultProps,
+                        props: previewProps || selectedComponent.defaultProps,
                         position: { x: 0, y: 0 },
                       },
                       false,
