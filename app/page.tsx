@@ -39,7 +39,7 @@ const componentDefinitions: ComponentDefinition[] = [
   {
     type: "Button",
     name: "Button",
-    icon: "Square",
+    icon: "MousePointer",
     description: "Interact with the component and modify its props using the inspector",
     defaultProps: {
       children: "Button",
@@ -94,14 +94,16 @@ const componentDefinitions: ComponentDefinition[] = [
   {
     type: "Input",
     name: "Input",
-    icon: "Type",
+    icon: "TextCursorInput",
     description: "Text input field for collecting user data with various input types and states",
     defaultProps: {
+      label: "Label",
       placeholder: "Enter text...",
       type: "text",
       disabled: false,
     },
     propTypes: {
+      label: { type: "string" },
       placeholder: { type: "string" },
       type: { type: "select", options: ["text", "email", "password", "number"] },
       disabled: { type: "boolean" },
@@ -121,6 +123,116 @@ const componentDefinitions: ComponentDefinition[] = [
       title: { type: "string" },
       description: { type: "string" },
       variant: { type: "select", options: ["default", "destructive"] },
+    },
+  },
+  {
+    type: "Text",
+    name: "Text",
+    icon: "FileText",
+    description: "Basic text element for displaying content with different sizes and styles",
+    defaultProps: {
+      children: "Sample text",
+      size: "default",
+      variant: "default",
+    },
+    propTypes: {
+      children: { type: "string" },
+      size: { type: "select", options: ["sm", "default", "lg", "xl"] },
+      variant: { type: "select", options: ["default", "muted", "destructive"] },
+    },
+  },
+
+  {
+    type: "Checkbox",
+    name: "Checkbox",
+    icon: "CheckSquare",
+    description: "Checkbox input for boolean selections and toggles",
+    defaultProps: {
+      label: "Checkbox",
+      checked: false,
+      disabled: false,
+    },
+    propTypes: {
+      label: { type: "string" },
+      checked: { type: "boolean" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "Switch",
+    name: "Switch",
+    icon: "ToggleLeft",
+    description: "Toggle switch for on/off states and settings",
+    defaultProps: {
+      label: "Switch",
+      checked: false,
+      disabled: false,
+    },
+    propTypes: {
+      label: { type: "string" },
+      checked: { type: "boolean" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "Progress",
+    name: "Progress",
+    icon: "BarChart3",
+    description: "Progress bar for showing completion status and loading states",
+    defaultProps: {
+      value: 50,
+      max: 100,
+      showLabel: true,
+    },
+    propTypes: {
+      value: { type: "string" },
+      max: { type: "string" },
+      showLabel: { type: "boolean" },
+    },
+  },
+  {
+    type: "Separator",
+    name: "Separator",
+    icon: "Minus",
+    description: "Visual divider for separating content sections",
+    defaultProps: {
+      orientation: "horizontal",
+    },
+    propTypes: {
+      orientation: { type: "select", options: ["horizontal", "vertical"] },
+    },
+  },
+  {
+    type: "Avatar",
+    name: "Avatar",
+    icon: "User",
+    description: "User profile image or initials display component",
+    defaultProps: {
+      src: "",
+      fallback: "JD",
+      size: "default",
+    },
+    propTypes: {
+      src: { type: "string" },
+      fallback: { type: "string" },
+      size: { type: "select", options: ["sm", "default", "lg"] },
+    },
+  },
+
+  {
+    type: "Textarea",
+    name: "Textarea",
+    icon: "FileText",
+    description: "Multi-line text input for longer content and descriptions",
+    defaultProps: {
+      placeholder: "Enter your message...",
+      rows: 3,
+      disabled: false,
+    },
+    propTypes: {
+      placeholder: { type: "string" },
+      rows: { type: "string" },
+      disabled: { type: "boolean" },
     },
   },
 ]
@@ -147,9 +259,23 @@ export default function PrototypeDesignTool() {
   useEffect(() => {
     const savedLeftPanel = localStorage.getItem('leftPanelOpen')
     const savedRightPanel = localStorage.getItem('rightPanelOpen')
+    const savedActiveView = localStorage.getItem('activeView')
+    const savedCanvasComponents = localStorage.getItem('canvasComponents')
     
     setLeftPanelOpen(savedLeftPanel !== null ? JSON.parse(savedLeftPanel) : true)
     setRightPanelOpen(savedRightPanel !== null ? JSON.parse(savedRightPanel) : true)
+    setActiveView(savedActiveView !== null ? JSON.parse(savedActiveView) : "component")
+    
+    if (savedCanvasComponents) {
+      try {
+        const parsedComponents = JSON.parse(savedCanvasComponents)
+
+        setCanvasComponents(parsedComponents)
+      } catch (error) {
+        console.error('Error parsing saved canvas components:', error)
+      }
+    }
+    
     setIsHydrated(true)
   }, [])
 
@@ -165,9 +291,23 @@ export default function PrototypeDesignTool() {
     }
   }, [rightPanelOpen, isHydrated])
 
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem('activeView', JSON.stringify(activeView))
+    }
+  }, [activeView, isHydrated])
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem('canvasComponents', JSON.stringify(canvasComponents))
+    }
+  }, [canvasComponents, isHydrated])
+
   if (!isHydrated) {
     return <div className="h-screen bg-background" />
   }
+
+
 
   const toggleCodePanel = () => {
     setIsCollapsed(!isCollapsed)
@@ -175,20 +315,20 @@ export default function PrototypeDesignTool() {
 
   const addComponentToCanvas = (componentDef: ComponentDefinition, position?: { x: number; y: number }) => {
     const newInstance: ComponentInstance = {
-      id: `${componentDef.type}-${Date.now()}`,
+      id: `${componentDef.type}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type: componentDef.type,
       props: { ...componentDef.defaultProps },
       position: position || {
-        x: Math.random() * 400 + 50,
-        y: Math.random() * 300 + 50,
+        x: Math.random() * 300 + 100, // More centered positioning
+        y: Math.random() * 200 + 100,
       },
     }
+    
     setCanvasComponents((prev) => [...prev, newInstance])
     setSelectedInstance(newInstance)
     
-    if (activeView === "component") {
-      setActiveView("canvas")
-    }
+    // Always switch to canvas view when adding components
+    setActiveView("canvas")
   }
 
   const updateInstanceProps = (instanceId: string, newProps: ComponentProps) => {
@@ -385,8 +525,7 @@ export default function PrototypeDesignTool() {
           onToggleRightPanel={() => setRightPanelOpen(!rightPanelOpen)}
         />
 
-        <div className="flex-1 flex flex-col min-h-0">
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 flex flex-col min-h-0">
             <Canvas
               activeView={activeView}
               selectedComponent={selectedComponent}
@@ -399,7 +538,6 @@ export default function PrototypeDesignTool() {
               onAddToCanvas={addComponentToCanvas}
               previewProps={previewProps}
             />
-          </div>
 
           {/* Code Panel */}
           {activeView === "component" && (
