@@ -15,7 +15,6 @@ interface PropertiesPanelProps {
   componentDef: ComponentDefinition | null
   instance: ComponentInstance | null
   onUpdateProps: (instanceId: string, newProps: Record<string, any>) => void
-  // New props for preview mode
   previewProps?: Record<string, any>
   onPreviewPropsChange?: (newProps: Record<string, any>) => void
 }

@@ -127,15 +127,40 @@ export default function PrototypeDesignTool() {
   const [leftPanelOpen, setLeftPanelOpen] = useState(true)
   const [rightPanelOpen, setRightPanelOpen] = useState(true)
   const [previewProps, setPreviewProps] = useState<Record<string, any>>({})
+  const [isHydrated, setIsHydrated] = useState(false)
   const isMobile = useIsMobile()
   const [isCollapsed, setIsCollapsed] = useState(false)
 
-  // Initialize preview props when selected component changes
   useEffect(() => {
     if (selectedComponent) {
       setPreviewProps(selectedComponent.defaultProps)
     }
   }, [selectedComponent])
+
+  useEffect(() => {
+    const savedLeftPanel = localStorage.getItem('leftPanelOpen')
+    const savedRightPanel = localStorage.getItem('rightPanelOpen')
+    
+    setLeftPanelOpen(savedLeftPanel !== null ? JSON.parse(savedLeftPanel) : true)
+    setRightPanelOpen(savedRightPanel !== null ? JSON.parse(savedRightPanel) : true)
+    setIsHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem('leftPanelOpen', JSON.stringify(leftPanelOpen))
+    }
+  }, [leftPanelOpen, isHydrated])
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem('rightPanelOpen', JSON.stringify(rightPanelOpen))
+    }
+  }, [rightPanelOpen, isHydrated])
+
+  if (!isHydrated) {
+    return <div className="h-screen bg-background" />
+  }
 
   const toggleCodePanel = () => {
     setIsCollapsed(!isCollapsed)
@@ -154,7 +179,6 @@ export default function PrototypeDesignTool() {
     setCanvasComponents((prev) => [...prev, newInstance])
     setSelectedInstance(newInstance)
     
-    // Switch to canvas view when adding component
     if (activeView === "component") {
       setActiveView("canvas")
     }
@@ -185,7 +209,6 @@ export default function PrototypeDesignTool() {
     setSelectedInstance(null)
   }
 
-  // Update preview props when component selection changes
   const handleComponentSelect = (component: ComponentDefinition | null) => {
     setSelectedComponent(component)
     if (component) {
@@ -323,9 +346,6 @@ export default function PrototypeDesignTool() {
           <div className="p-4 border-b bg-background/95 backdrop-blur">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-medium">Components</h3>
-              <Button onClick={() => setLeftPanelOpen(false)} variant="ghost" size="sm" className="h-6 w-6 p-0">
-                ×
-              </Button>
             </div>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -399,9 +419,6 @@ export default function PrototypeDesignTool() {
           <div className="p-4 border-b bg-background/95 backdrop-blur">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium">Properties</h3>
-              <Button onClick={() => setRightPanelOpen(false)} variant="ghost" size="sm" className="h-6 w-6 p-0">
-                ×
-              </Button>
             </div>
           </div>
 
