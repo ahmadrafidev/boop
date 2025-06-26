@@ -17,6 +17,7 @@ interface CanvasProps {
   onSelectInstance: (instance: ComponentInstance | null) => void
   onUpdatePosition: (instanceId: string, position: { x: number; y: number }) => void
   onClearCanvas: () => void
+  onAddToCanvas: (componentDef: ComponentDefinition) => void
 }
 
 function renderComponent(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
@@ -108,6 +109,7 @@ export function Canvas({
   onSelectInstance,
   onUpdatePosition,
   onClearCanvas,
+  onAddToCanvas,
 }: CanvasProps) {
   const handleDragStart = (e: React.DragEvent, instance: ComponentInstance) => {
     e.dataTransfer.setData("text/plain", instance.id)
@@ -127,19 +129,93 @@ export function Canvas({
     e.preventDefault()
     e.stopPropagation()
     
-    const instanceId = e.dataTransfer.getData("text/plain")
-    if (!instanceId) return
-    
     const rect = e.currentTarget.getBoundingClientRect()
     const x = Math.max(0, e.clientX - rect.left - 50) // Account for element center
     const y = Math.max(0, e.clientY - rect.top - 25)
-
-    onUpdatePosition(instanceId, { x, y })
+    
+    // Check if it's a new component being added
+    const componentType = e.dataTransfer.getData("component/type")
+    if (componentType) {
+      // Find the component definition and add it to canvas
+      const componentDef = [
+        {
+          type: "Button",
+          name: "Button",
+          icon: "Square",
+          description: "Interact with the component and modify its props using the inspector",
+          defaultProps: { children: "Button", variant: "default", size: "default" },
+          propTypes: {
+            children: { type: "string" },
+            variant: { type: "select", options: ["default", "destructive", "outline", "secondary", "ghost", "link"] },
+            size: { type: "select", options: ["default", "sm", "lg", "icon"] },
+          },
+        },
+        {
+          type: "Card",
+          name: "Card",
+          icon: "CreditCard",
+          description: "A flexible container for grouping and displaying content in a clear, concise format",
+          defaultProps: { title: "Card Title", content: "Card content goes here", variant: "default" },
+          propTypes: {
+            title: { type: "string" },
+            content: { type: "string" },
+            variant: { type: "select", options: ["default", "outline"] },
+          },
+        },
+        {
+          type: "Badge",
+          name: "Badge",
+          icon: "Tag",
+          description: "Small status descriptors for UI elements, perfect for labels and indicators",
+          defaultProps: { children: "Badge", variant: "default" },
+          propTypes: {
+            children: { type: "string" },
+            variant: { type: "select", options: ["default", "secondary", "destructive", "outline"] },
+          },
+        },
+        {
+          type: "Input",
+          name: "Input",
+          icon: "Type",
+          description: "Text input field for collecting user data with various input types and states",
+          defaultProps: { placeholder: "Enter text...", type: "text", disabled: false },
+          propTypes: {
+            placeholder: { type: "string" },
+            type: { type: "select", options: ["text", "email", "password", "number"] },
+            disabled: { type: "boolean" },
+          },
+        },
+        {
+          type: "Alert",
+          name: "Alert",
+          icon: "AlertCircle",
+          description: "Display important messages and notifications to users with different severity levels",
+          defaultProps: { title: "Alert Title", description: "This is an alert description", variant: "default" },
+          propTypes: {
+            title: { type: "string" },
+            description: { type: "string" },
+            variant: { type: "select", options: ["default", "destructive"] },
+          },
+        },
+      ].find(def => def.type === componentType)
+      
+      if (componentDef) {
+        onAddToCanvas(componentDef)
+      }
+      return
+    }
+    
+    // Otherwise, it's an existing component being moved
+    const instanceId = e.dataTransfer.getData("text/plain")
+    if (instanceId) {
+      onUpdatePosition(instanceId, { x, y })
+    }
   }
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
-    e.dataTransfer.dropEffect = "move"
+    const componentType = e.dataTransfer.types.includes("component/type")
+    e.dataTransfer.dropEffect = componentType ? "copy" : "move"
   }
 
   const handleCanvasClick = (e: React.MouseEvent) => {
@@ -150,28 +226,77 @@ export function Canvas({
   }
 
   if (activeView === "component" && selectedComponent) {
-    // Component preview mode
+    // Component preview mode - fullscreen documentation style
     return (
-      <div className="flex-1 bg-muted/30 flex items-center justify-center p-8">
-        <div className="bg-background rounded-lg shadow-sm p-16 max-w-4xl w-full border">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold mb-2">{selectedComponent.name}</h2>
-            <p className="text-muted-foreground">{selectedComponent.description}</p>
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="scale-150 transform-gpu">
-              {renderComponent(
-                {
-                  id: "preview",
-                  type: selectedComponent.type,
-                  props: selectedComponent.defaultProps,
-                  position: { x: 0, y: 0 },
-                },
-                false,
-                () => {},
-              )}
+      <div className="flex-1 bg-background overflow-auto">
+        {/* Header Section */}
+        <div className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 sticky top-0 z-10">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className="flex items-start justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl font-bold tracking-tight">{selectedComponent.name}</h1>
+                  <Badge variant="secondary" className="text-xs">
+                    Component
+                  </Badge>
+                </div>
+                <p className="text-lg text-muted-foreground max-w-2xl">
+                  {selectedComponent.description}
+                </p>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => onAddToCanvas(selectedComponent)}
+                className="flex items-center gap-2"
+              >
+                Add to Canvas
+              </Button>
             </div>
           </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 py-8 space-y-12">
+          {/* Preview Section */}
+          <section>
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-xl font-semibold mb-2">Preview</h2>
+                <p className="text-sm text-muted-foreground">
+                  Interactive preview of the {selectedComponent.name} component with default props.
+                </p>
+              </div>
+              
+              {/* Component Showcase */}
+              <div className="relative">
+                <div className="rounded-lg border border-border bg-background p-12 min-h-[300px] flex items-center justify-center">
+                  <div className="scale-125 transform-gpu">
+                    {renderComponent(
+                      {
+                        id: "preview",
+                        type: selectedComponent.type,
+                        props: selectedComponent.defaultProps,
+                        position: { x: 0, y: 0 },
+                      },
+                      false,
+                      () => {},
+                    )}
+                  </div>
+                </div>
+                {/* Grid background for showcase */}
+                <div 
+                  className="absolute inset-0 opacity-5 rounded-lg pointer-events-none"
+                  style={{
+                    backgroundImage: `
+                      linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+                      linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '24px 24px'
+                  }}
+                />
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     )

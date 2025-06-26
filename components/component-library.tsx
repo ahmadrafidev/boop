@@ -10,7 +10,7 @@ interface ComponentLibraryProps {
   searchQuery: string
   selectedComponent: ComponentDefinition | null
   onSelectComponent: (component: ComponentDefinition) => void
-  onAddToCanvas: (component: ComponentDefinition) => void
+  onAddToCanvas: (component: ComponentDefinition, position?: { x: number; y: number }) => void
 }
 
 const iconMap = {
@@ -77,6 +77,11 @@ export function ComponentLibrary({
                   onClick={() => onSelectComponent(component)}
                   aria-label={`Select ${component.name} component`}
                   title={component.description}
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData("component/type", component.type)
+                    e.dataTransfer.effectAllowed = "copy"
+                  }}
                 >
                   <IconComponent className="w-6 h-6" />
                   <span className="text-xs font-medium truncate w-full text-center">{component.name}</span>

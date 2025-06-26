@@ -19,7 +19,6 @@ export const metadata: Metadata = {
   description: "A modern component design and prototyping tool for React components",
   keywords: ["design", "components", "react", "prototyping", "ui"],
   authors: [{ name: "Boop Team" }],
-  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({

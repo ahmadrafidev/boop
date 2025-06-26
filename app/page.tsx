@@ -127,13 +127,18 @@ export default function PrototypeDesignTool() {
   const [leftPanelOpen, setLeftPanelOpen] = useState(true)
   const [rightPanelOpen, setRightPanelOpen] = useState(true)
   const isMobile = useIsMobile()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
-  const addComponentToCanvas = (componentDef: ComponentDefinition) => {
+  const toggleCodePanel = () => {
+    setIsCollapsed(!isCollapsed)
+  }
+
+  const addComponentToCanvas = (componentDef: ComponentDefinition, position?: { x: number; y: number }) => {
     const newInstance: ComponentInstance = {
       id: `${componentDef.type}-${Date.now()}`,
       type: componentDef.type,
       props: { ...componentDef.defaultProps },
-      position: {
+      position: position || {
         x: Math.random() * 400 + 50,
         y: Math.random() * 300 + 50,
       },
@@ -230,18 +235,31 @@ export default function PrototypeDesignTool() {
             onToggleRightPanel={() => setRightPanelOpen(!rightPanelOpen)}
           />
 
-          <div className="flex-1 flex flex-col">
-            <Canvas
-              activeView={activeView}
-              selectedComponent={selectedComponent}
-              selectedInstance={selectedInstance}
-              canvasComponents={canvasComponents}
-              onSelectInstance={setSelectedInstance}
-              onUpdatePosition={updateInstancePosition}
-              onClearCanvas={clearCanvas}
-            />
+          <div className="flex-1 flex flex-col min-h-0">
+            <div className="flex-1 min-h-0">
+              <Canvas
+                activeView={activeView}
+                selectedComponent={selectedComponent}
+                selectedInstance={selectedInstance}
+                canvasComponents={canvasComponents}
+                componentDefinitions={componentDefinitions}
+                onSelectInstance={setSelectedInstance}
+                onUpdatePosition={updateInstancePosition}
+                onClearCanvas={clearCanvas}
+                onAddToCanvas={addComponentToCanvas}
+              />
+            </div>
 
-            {activeView === "component" && <CodePanel component={selectedComponent} instance={selectedInstance} />}
+            {activeView === "component" && (
+              <div className={`flex-shrink-0 ${isCollapsed ? 'h-auto' : 'h-28'}`}>
+                <CodePanel 
+                  component={selectedComponent} 
+                  instance={selectedInstance}
+                  isCollapsed={isCollapsed}
+                  onToggleCollapse={toggleCodePanel}
+                />
+              </div>
+            )}
           </div>
 
           {/* Mobile bottom sheet for panels */}
@@ -275,7 +293,7 @@ export default function PrototypeDesignTool() {
 
   return (
     <div className="h-screen bg-background flex">
-      {/* Left Sidebar - Full Height */}
+      {/* Left Sidebar */}
       {leftPanelOpen && (
         <div className="w-80 border-r bg-muted/30 flex flex-col">
           <div className="p-4 border-b bg-background/95 backdrop-blur">
@@ -321,22 +339,35 @@ export default function PrototypeDesignTool() {
         />
 
         <div className="flex-1 flex flex-col min-h-0">
-          <Canvas
-            activeView={activeView}
-            selectedComponent={selectedComponent}
-            selectedInstance={selectedInstance}
-            canvasComponents={canvasComponents}
-            onSelectInstance={setSelectedInstance}
-            onUpdatePosition={updateInstancePosition}
-            onClearCanvas={clearCanvas}
-          />
+          <div className="flex-1 min-h-0">
+            <Canvas
+              activeView={activeView}
+              selectedComponent={selectedComponent}
+              selectedInstance={selectedInstance}
+              canvasComponents={canvasComponents}
+              componentDefinitions={componentDefinitions}
+              onSelectInstance={setSelectedInstance}
+              onUpdatePosition={updateInstancePosition}
+              onClearCanvas={clearCanvas}
+              onAddToCanvas={addComponentToCanvas}
+            />
+          </div>
 
           {/* Code Panel */}
-          {activeView === "component" && <CodePanel component={selectedComponent} instance={selectedInstance} />}
+          {activeView === "component" && (
+            <div className={`flex-shrink-0 ${isCollapsed ? 'h-auto' : 'h-36'}`}>
+              <CodePanel 
+                component={selectedComponent} 
+                instance={selectedInstance}
+                isCollapsed={isCollapsed}
+                onToggleCollapse={toggleCodePanel}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Right Sidebar - Full Height */}
+      {/* Right Sidebar */}
       {rightPanelOpen && (
         <div className="w-80 border-l bg-muted/30 flex flex-col">
           <div className="p-4 border-b bg-background/95 backdrop-blur">
