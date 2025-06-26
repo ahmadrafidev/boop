@@ -12,11 +12,18 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
+export type ComponentProps = Record<string, string | number | boolean | undefined>
+
 export interface ComponentInstance {
   id: string
   type: string
-  props: Record<string, any>
+  props: ComponentProps
   position: { x: number; y: number }
+}
+
+export type PropType = {
+  type: "string" | "boolean" | "select"
+  options?: string[]
 }
 
 export interface ComponentDefinition {
@@ -24,8 +31,8 @@ export interface ComponentDefinition {
   name: string
   icon: string
   description: string
-  defaultProps: Record<string, any>
-  propTypes: Record<string, { type: string; options?: string[] }>
+  defaultProps: ComponentProps
+  propTypes: Record<string, PropType>
 }
 
 const componentDefinitions: ComponentDefinition[] = [
@@ -126,7 +133,7 @@ export default function PrototypeDesignTool() {
   const [searchQuery, setSearchQuery] = useState("")
   const [leftPanelOpen, setLeftPanelOpen] = useState(true)
   const [rightPanelOpen, setRightPanelOpen] = useState(true)
-  const [previewProps, setPreviewProps] = useState<Record<string, any>>({})
+  const [previewProps, setPreviewProps] = useState<ComponentProps>({})
   const [isHydrated, setIsHydrated] = useState(false)
   const isMobile = useIsMobile()
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -184,7 +191,7 @@ export default function PrototypeDesignTool() {
     }
   }
 
-  const updateInstanceProps = (instanceId: string, newProps: Record<string, any>) => {
+  const updateInstanceProps = (instanceId: string, newProps: ComponentProps) => {
     setCanvasComponents((prev) =>
       prev.map((comp) => (comp.id === instanceId ? { ...comp, props: { ...comp.props, ...newProps } } : comp)),
     )
@@ -193,7 +200,7 @@ export default function PrototypeDesignTool() {
     }
   }
 
-  const updatePreviewProps = (newProps: Record<string, any>) => {
+  const updatePreviewProps = (newProps: ComponentProps) => {
     setPreviewProps(newProps)
   }
 
@@ -217,7 +224,7 @@ export default function PrototypeDesignTool() {
   }
 
   const currentComponentDef = selectedInstance
-    ? componentDefinitions.find((def) => def.type === selectedInstance.type)
+    ? componentDefinitions.find((def) => def.type === selectedInstance.type) || null
     : selectedComponent
 
   // Mobile sidebar component
@@ -271,8 +278,6 @@ export default function PrototypeDesignTool() {
           <TopNavigation
             activeView={activeView}
             onViewChange={setActiveView}
-            componentCount={canvasComponents.length}
-            onClearCanvas={clearCanvas}
             selectedComponent={selectedComponent}
             leftPanelOpen={leftPanelOpen}
             rightPanelOpen={rightPanelOpen}
@@ -373,8 +378,6 @@ export default function PrototypeDesignTool() {
         <TopNavigation
           activeView={activeView}
           onViewChange={setActiveView}
-          componentCount={canvasComponents.length}
-          onClearCanvas={clearCanvas}
           selectedComponent={selectedComponent}
           leftPanelOpen={leftPanelOpen}
           rightPanelOpen={rightPanelOpen}

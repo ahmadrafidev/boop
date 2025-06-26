@@ -1,6 +1,6 @@
 "use client"
 
-import type { ComponentDefinition, ComponentInstance } from "@/app/page"
+import type { ComponentDefinition, ComponentInstance, ComponentProps } from "@/app/page"
 import { Button } from "@/components/ui/button"
 import { Copy, Check, ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from "react"
@@ -11,7 +11,7 @@ interface CodePanelProps {
   instance: ComponentInstance | null
   isCollapsed: boolean
   onToggleCollapse: () => void
-  previewProps?: Record<string, any>
+  previewProps?: ComponentProps
 }
 
 export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, previewProps }: CodePanelProps) {
@@ -22,24 +22,24 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
   const props = instance?.props || previewProps || component.defaultProps
 
   const generateCode = () => {
-    const allProps = Object.entries(props).filter(([key, value]) => {
+    const allProps = Object.entries(props).filter(([, value]) => {
       return value !== undefined && value !== null && value !== ""
     })
 
-    const propStrings = allProps.map(([key, value]) => {
-      if (key === "children" && typeof value === "string") {
+    const propStrings = allProps.map(([propKey, value]) => {
+      if (propKey === "children" && typeof value === "string") {
         return null 
       }
       
       if (typeof value === "boolean") {
-        return value ? key : `${key}={false}`
+        return value ? propKey : `${propKey}={false}`
       }
       
       if (typeof value === "string") {
-        return `${key}="${value}"`
+        return `${propKey}="${value}"`
       }
       
-      return `${key}={${JSON.stringify(value)}}`
+      return `${propKey}={${JSON.stringify(value)}}`
     }).filter(Boolean)
 
     const hasChildren = props.children && typeof props.children === "string"
@@ -73,7 +73,7 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
     }
   }
 
-  const highlightSyntax = (line: string, lineNumber: number) => {
+  const highlightSyntax = (line: string) => {
     if (line.trim() === "") return <span>&nbsp;</span>
 
     // Handle opening tag
@@ -94,7 +94,7 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
                 <span key={index}>
                   <span className="text-purple-600 dark:text-purple-400">{attr}</span>
                   <span>=</span>
-                  <span className="text-green-600 dark:text-green-400">"{value}</span>
+                  <span className="text-green-600 dark:text-green-400">&quot;{value}</span>
                 </span>
               )
             }
@@ -194,7 +194,7 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
             <div className="flex-1 min-w-0">
               {lines.map((line, index) => (
                 <div key={index} className="whitespace-pre leading-5 transition-opacity duration-300 ease-in-out">
-                  {highlightSyntax(line, index)}
+                  {highlightSyntax(line)}
                 </div>
               ))}
             </div>

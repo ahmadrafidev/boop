@@ -1,11 +1,11 @@
 "use client"
 
-import type { ComponentDefinition, ComponentInstance } from "@/app/page"
+import type { ComponentDefinition, ComponentInstance, ComponentProps } from "@/app/page"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
@@ -14,9 +14,9 @@ import { RotateCcw } from "lucide-react"
 interface PropertiesPanelProps {
   componentDef: ComponentDefinition | null
   instance: ComponentInstance | null
-  onUpdateProps: (instanceId: string, newProps: Record<string, any>) => void
-  previewProps?: Record<string, any>
-  onPreviewPropsChange?: (newProps: Record<string, any>) => void
+  onUpdateProps: (instanceId: string, newProps: ComponentProps) => void
+  previewProps?: ComponentProps
+  onPreviewPropsChange?: (newProps: ComponentProps) => void
 }
 
 export function PropertiesPanel({ 
@@ -43,7 +43,7 @@ export function PropertiesPanel({
   const isInstance = Boolean(instance)
   const currentProps = instance?.props || previewProps || componentDef.defaultProps
   
-  const handlePropChange = (propName: string, value: any) => {
+  const handlePropChange = (propName: string, value: string | number | boolean) => {
     if (instance) {
       // Canvas mode - update actual instance
       onUpdateProps(instance.id, { [propName]: value })
@@ -129,7 +129,7 @@ export function PropertiesPanel({
                 {propConfig.type === "string" && (
                   <Input
                     id={propName}
-                    value={currentValue || ""}
+                    value={String(currentValue || "")}
                     onChange={(e) => handlePropChange(propName, e.target.value)}
                     placeholder={`Enter ${propName}...`}
                     className="text-sm"
@@ -138,7 +138,7 @@ export function PropertiesPanel({
 
                 {propConfig.type === "select" && propConfig.options && (
                   <Select
-                    value={currentValue || propConfig.options[0]}
+                    value={String(currentValue || propConfig.options[0])}
                     onValueChange={(value) => handlePropChange(propName, value)}
                   >
                     <SelectTrigger className="text-sm">
@@ -159,7 +159,7 @@ export function PropertiesPanel({
                     <div className="flex items-center space-x-2">
                       <Switch
                         id={propName}
-                        checked={currentValue || false}
+                        checked={Boolean(currentValue || false)}
                         onCheckedChange={(checked) => handlePropChange(propName, checked)}
                       />
                       <Label htmlFor={propName} className="text-sm">
@@ -175,7 +175,7 @@ export function PropertiesPanel({
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handlePropChange(propName, defaultValue)}
+                      onClick={() => handlePropChange(propName, defaultValue ?? "")}
                       className="h-auto p-1 text-xs"
                     >
                       Reset
@@ -190,7 +190,7 @@ export function PropertiesPanel({
         {!isInstance && (
           <div className="mt-6 p-3 bg-muted/50 rounded-lg border">
             <p className="text-xs text-muted-foreground">
-              💡 You're editing the preview. Add this component to the canvas to create a persistent instance.
+              💡 You&apos;re editing the preview. Add this component to the canvas to create a persistent instance.
             </p>
           </div>
         )}

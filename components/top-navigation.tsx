@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Component, Layout, Trash2, PanelLeft, PanelRight, Moon, Sun } from "lucide-react"
+import { Component, Layout, PanelLeft, PanelRight, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useIsMobile } from "@/hooks/use-mobile"
 import type { ComponentDefinition } from "@/app/page"
@@ -10,8 +10,6 @@ import type { ComponentDefinition } from "@/app/page"
 interface TopNavigationProps {
   activeView: "component" | "canvas"
   onViewChange: (view: "component" | "canvas") => void
-  componentCount: number
-  onClearCanvas: () => void
   selectedComponent: ComponentDefinition | null
   leftPanelOpen: boolean
   rightPanelOpen: boolean
@@ -22,8 +20,6 @@ interface TopNavigationProps {
 export function TopNavigation({
   activeView,
   onViewChange,
-  componentCount,
-  onClearCanvas,
   selectedComponent,
   leftPanelOpen,
   rightPanelOpen,

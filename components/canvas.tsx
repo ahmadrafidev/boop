@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import type { ComponentDefinition, ComponentInstance } from "@/app/page"
+import type { ComponentDefinition, ComponentInstance, ComponentProps } from "@/app/page"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -19,7 +19,7 @@ interface CanvasProps {
   onUpdatePosition: (instanceId: string, position: { x: number; y: number }) => void
   onClearCanvas: () => void
   onAddToCanvas: (componentDef: ComponentDefinition) => void
-  previewProps?: Record<string, any>
+  previewProps?: ComponentProps
 }
 
 function renderComponent(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
@@ -35,23 +35,23 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
         return (
           <Button 
             key={instance.id} 
-            variant={props.variant || "default"} 
-            size={props.size || "default"} 
+            variant={(props.variant as "default" | "destructive" | "outline" | "secondary" | "ghost" | "link") || "default"} 
+            size={(props.size as "default" | "sm" | "lg" | "icon") || "default"} 
             className={baseClasses} 
             onClick={onClick}
-            disabled={props.disabled}
+            disabled={Boolean(props.disabled)}
           >
-            {props.children || "Button"}
+            {String(props.children || "Button")}
           </Button>
         )
       case "Card":
         return (
           <Card key={instance.id} className={`${baseClasses} w-64`} onClick={onClick}>
             <CardHeader>
-              <CardTitle className="text-lg">{props.title || "Card Title"}</CardTitle>
+              <CardTitle className="text-lg">{String(props.title || "Card Title")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">{props.content || "Card content"}</p>
+              <p className="text-sm text-muted-foreground">{String(props.content || "Card content")}</p>
             </CardContent>
           </Card>
         )
@@ -59,20 +59,20 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
         return (
           <Badge 
             key={instance.id} 
-            variant={props.variant || "default"} 
+            variant={(props.variant as "default" | "secondary" | "destructive" | "outline") || "default"} 
             className={baseClasses} 
             onClick={onClick}
           >
-            {props.children || "Badge"}
+            {String(props.children || "Badge")}
           </Badge>
         )
       case "Input":
         return (
           <Input
             key={instance.id}
-            placeholder={props.placeholder || "Enter text..."}
-            type={props.type || "text"}
-            disabled={props.disabled}
+            placeholder={String(props.placeholder || "Enter text...")}
+            type={(props.type as "text" | "email" | "password" | "number") || "text"}
+            disabled={Boolean(props.disabled)}
             className={`${baseClasses} w-64`}
             onClick={onClick}
             readOnly
@@ -80,10 +80,10 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
         )
       case "Alert":
         return (
-          <Alert key={instance.id} variant={props.variant || "default"} className={`${baseClasses} w-80`} onClick={onClick}>
+          <Alert key={instance.id} variant={(props.variant as "default" | "destructive") || "default"} className={`${baseClasses} w-80`} onClick={onClick}>
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>{props.title || "Alert Title"}</AlertTitle>
-            <AlertDescription>{props.description || "Alert description"}</AlertDescription>
+            <AlertTitle>{String(props.title || "Alert Title")}</AlertTitle>
+            <AlertDescription>{String(props.description || "Alert description")}</AlertDescription>
           </Alert>
         )
       default:
