@@ -7,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { RotateCcw, Info } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
@@ -155,7 +154,7 @@ export function PropertiesPanel({
   const isInstance = Boolean(instance)
   const currentProps = instance?.props || previewProps || componentDef.defaultProps
   
-  const handlePropChange = (propName: string, value: string | number | boolean) => {
+  const handlePropChange = (propName: string, value: string | number | boolean | undefined) => {
     if (instance) {
       // Canvas mode - update actual instance
       onUpdateProps(instance.id, { [propName]: value })
@@ -190,7 +189,13 @@ export function PropertiesPanel({
     propName => currentProps[propName] !== undefined && currentProps[propName] !== ""
   )
 
-  const renderPropEditor = (propName: string, propConfig: any, currentValue: any, defaultValue: any, isModified: boolean) => {
+  const renderPropEditor = (
+    propName: string, 
+    propConfig: { type: string; options?: string[]; description?: string }, 
+    currentValue: string | number | boolean | undefined, 
+    defaultValue: string | number | boolean | undefined, 
+    isModified: boolean
+  ) => {
     const inputId = `prop-${propName}`
     
     return (
@@ -224,7 +229,7 @@ export function PropertiesPanel({
         )}
 
         {propConfig.type === "string" && (
-          currentValue && currentValue.length > 50 ? (
+          currentValue && typeof currentValue === "string" && currentValue.length > 50 ? (
             <Textarea
               id={inputId}
               value={String(currentValue || "")}
