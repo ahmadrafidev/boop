@@ -421,7 +421,7 @@ export function PropertiesPanel({
                     WAI-ARIA Properties
                   </p>
                   <p className="text-xs text-blue-700/80 dark:text-blue-200/80 leading-relaxed">
-                    Enhance accessibility for users with assistive technologies. Only set values that are appropriate for your component's purpose and context.
+                                         Enhance accessibility for users with assistive technologies. Only set values that are appropriate for your component&apos;s purpose and context.
                   </p>
                 </div>
               </div>
