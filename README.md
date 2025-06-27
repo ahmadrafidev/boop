@@ -5,9 +5,9 @@
   
   **Touch, tweak, and perfect your UI components**
   
-  > ⚠️ **Work in Progress** - This project is currently under active development. Features and functionality may change.
+  > ⚠️ **Work in Progress** ⚠️
   
-  [Live Demo](https://boop-ui.vercel.app) • [Report Bug](https://github.com/ahmadrafidev/boop/issues) • [Request Feature](https://github.com/ahmadrafidev/boop/issues)
+  [Live Demo](https://booopy.vercel.app/) • [Report Bug](https://github.com/ahmadrafidev/boop/issues) • [Request Feature](https://github.com/ahmadrafidev/boop/issues)
 </div>
 
 ## 🎯 What is Boop?
@@ -43,14 +43,6 @@ Open [localhost:3000](http://localhost:3000) and start building! 🎉
 2. **Drop it** on the canvas
 3. **Select and tweak** its properties on the right
 4. **Copy the code** when you're happy with the result
-
-## 🛠️ Built With
-
-- [Next.js 15](https://nextjs.org/) - React framework
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [Shadcn/ui](https://ui.shadcn.com/) - Component library
-- [Radix UI](https://www.radix-ui.com/) - Primitives
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
 
 ## 🎨 Component Library
 
