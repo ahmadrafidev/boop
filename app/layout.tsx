@@ -15,10 +15,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Boop - Component Design Tool",
-  description: "A modern component design and prototyping tool for React components",
+  title: "Boop - UI Component Design Tool",
+  description: "Touch, tweak, and perfect your UI components with ease.",
   keywords: ["design", "components", "react", "prototyping", "ui"],
-  authors: [{ name: "Boop Team" }],
+  authors: [{ 
+    name: "Ahmad Rafi Wirana", 
+    url: "https://x.com/rafiwiranaa" 
+  }],
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

@@ -394,7 +394,7 @@ export default function PrototypeDesignTool() {
     ) : (
       <div className="flex flex-col h-full">
         <div className="p-4 border-b bg-background">
-          <h3 className="text-sm font-medium">Properties</h3>
+          <h3 className="text-sm font-medium">Inspector</h3>
         </div>
         <div className="flex-1 overflow-y-auto">
           <PropertiesPanel
@@ -554,7 +554,7 @@ export default function PrototypeDesignTool() {
         <div className="w-80 border-l bg-muted/30 flex flex-col">
           <div className="p-4 border-b bg-background/95 backdrop-blur">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium">Properties</h3>
+              <h3 className="text-base md:text-lg font-semibold">Inspector</h3>
             </div>
           </div>
 

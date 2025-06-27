@@ -1,97 +1,83 @@
 <div align="center">
   <img src="public/images/logo.png" alt="Boop Logo" width="120" height="120">
   
-  # Boop - Component Design Tool
+  # Boop - UI Component Design Tool
+  
+  **Touch, tweak, and perfect your UI components**
   
   > ⚠️ **Work in Progress** - This project is currently under active development. Features and functionality may change.
+  
+  [Live Demo](https://boop-ui.vercel.app) • [Report Bug](https://github.com/ahmadrafidev/boop/issues) • [Request Feature](https://github.com/ahmadrafidev/boop/issues)
 </div>
 
-A modern, interactive component design and prototyping tool. Boop allows you to visually design, configure, and prototype React UI components with real-time property editing.
+## 🎯 What is Boop?
 
-## ✨ Features
+Boop is a visual playground for UI components. Design, configure, and prototype your components with an intuitive drag-and-drop interface, real-time property editing, and instant code generation.
 
-- **Visual Component Library**: Browse and interact with a comprehensive set of pre-built UI components
-- **Drag & Drop Canvas**: Intuitive visual design interface for arranging components
-- **Real-time Property Editing**: Live configuration of component props with instant visual feedback
-- **Component Inspector**: Detailed property panel for fine-tuning component behavior
 
-## 🚀 Getting Started
+## ✨ Key Features
 
-### Prerequisites
+- **🎪 Visual Canvas** - Drag, drop, and arrange components effortlessly
+- **⚡ Live Editing** - Tweak properties and see changes instantly
+- **📝 Code Generation** - Get clean JSX code for your designs
+- **📱 Responsive** - Works beautifully on desktop and mobile
+- **🧩 Rich Components** - Buttons, cards, forms, and more
 
-- Node.js 18+ 
-- pnpm (recommended), npm, or yarn
+## 🚀 Quick Start
 
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone <repository-url>
+# Clone and install
+git clone https://github.com/ahmadrafidev/boop.git
 cd boop
-```
-
-2. Install dependencies:
-```bash
 pnpm install
-# or
-npm install
-# or
-yarn install
-```
 
-3. Start the development server:
-```bash
+# Start designing
 pnpm dev
-# or
-npm run dev
-# or
-yarn dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+Open [localhost:3000](http://localhost:3000) and start building! 🎉
 
-## 📋 Available Scripts
+## 🎮 How to Use
 
-- `pnpm dev` - Start development server with Turbopack
-- `pnpm build` - Build for production
-- `pnpm start` - Start production server
-- `pnpm lint` - Run ESLint
+1. **Pick a component** from the left sidebar
+2. **Drop it** on the canvas
+3. **Select and tweak** its properties on the right
+4. **Copy the code** when you're happy with the result
+
+## 🛠️ Built With
+
+- [Next.js 15](https://nextjs.org/) - React framework
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Shadcn/ui](https://ui.shadcn.com/) - Component library
+- [Radix UI](https://www.radix-ui.com/) - Primitives
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
 
 ## 🎨 Component Library
 
-Boop includes a comprehensive set of UI components:
+### Form Elements
+Button • Input • Checkbox • Switch • Textarea
 
-### Form Components
-- **Button** - Interactive buttons with multiple variants and sizes
-- **Input** - Text input fields with labels and validation states
-- **Checkbox** - Boolean selection controls
-- **Switch** - Toggle switches for settings
-- **Textarea** - Multi-line text input
+### Display
+Card • Badge • Alert • Text • Avatar • Progress
 
-### Display Components
-- **Card** - Flexible content containers
-- **Badge** - Status indicators and labels
-- **Alert** - Important messages and notifications
-- **Text** - Typography with various sizes and styles
-- **Avatar** - User profile images with fallbacks
-- **Progress** - Progress bars and completion indicators
+### Layout
+Separator 
 
-### Layout Components
-- **Separator** - Visual content dividers
+## 🤝 Contributing
 
+Found a bug? Have an idea? [Open an issue](https://github.com/ahmadrafidev/boop/issues) or submit a PR!
 
-## 🎯 How to Use
-
-1. **Browse Components**: Use the left sidebar to explore available UI components
-2. **Add to Canvas**: Drag components from the library to the canvas or click to add them
-3. **Configure Properties**: Select components on the canvas to edit their properties in the right panel
-4. **View Code**: Toggle the code panel to see the generated code for your design
-5. **Mobile Preview**: The interface adapts to mobile screens with collapsible sidebars
+```bash
+# Fork the repo, then:
+git checkout -b feature/amazing-feature
+git commit -m 'Add amazing feature'
+git push origin feature/amazing-feature
+```
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - feel free to use this project however you'd like!
 
 ---
 
-Built with <3 by [Rafi](https://x.com/rafiwiranaa)
+Built with ❤️ by [Rafi](https://x.com/rafiwiranaa)

@@ -5,10 +5,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { RotateCcw, Info } from "lucide-react"
+import { RotateCcw, Info, Zap } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useState } from "react"
@@ -139,13 +138,13 @@ export function PropertiesPanel({
 
   if (!componentDef) {
     return (
-      <div className="p-4 flex items-center justify-center h-64" role="region" aria-label="Properties panel">
-        <div className="text-center text-muted-foreground">
-          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-muted flex items-center justify-center">
-            <span className="text-lg" role="img" aria-label="Settings">⚙️</span>
+      <div className="h-full flex items-center justify-center" role="region" aria-label="Properties panel">
+        <div className="text-center text-muted-foreground/50">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted/20 flex items-center justify-center">
+            <Zap className="w-8 h-8 text-muted-foreground/30" />
           </div>
-          <p className="text-sm">Select a component</p>
-          <p className="text-xs">Choose a component to edit its properties</p>
+          <p className="text-sm font-medium mb-1">No component selected</p>
+          <p className="text-xs text-muted-foreground/60">Select a component to inspect its properties</p>
         </div>
       </div>
     )
@@ -199,248 +198,299 @@ export function PropertiesPanel({
     const inputId = `prop-${propName}`
     
     return (
-      <div key={propName} className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor={inputId} className="text-sm font-medium flex items-center gap-2">
-            {propName}
-            {isModified && <div className="w-1.5 h-1.5 bg-primary rounded-full" aria-hidden="true" />}
-          </Label>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs px-1.5 py-0.5">
-              {propConfig.type}
-            </Badge>
+      <div key={propName} className="group relative">
+        {/* Property Header */}
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <Label htmlFor={inputId} className="text-sm font-medium text-foreground flex items-center gap-2 truncate">
+                {propName}
+                {isModified && <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full flex-shrink-0" aria-hidden="true" />}
+              </Label>
+              <Badge variant="outline" className="text-xs h-5 px-2 font-mono bg-background border-muted/40 text-muted-foreground/80 flex-shrink-0">
+                {propConfig.type}
+              </Badge>
+            </div>
             {propConfig.description && (
-              <div 
-                className="w-4 h-4 text-muted-foreground cursor-help"
-                title={propConfig.description}
-                role="img"
-                aria-label="Property description"
-              >
-                <Info className="w-3 h-3" />
-              </div>
+              <p className="text-xs text-muted-foreground/60 leading-relaxed pr-6" id={`${inputId}-description`}>
+                {propConfig.description}
+              </p>
             )}
           </div>
+          {propConfig.description && (
+            <div 
+              className="w-4 h-4 text-muted-foreground/40 hover:text-muted-foreground/80 cursor-help transition-colors mt-0.5 flex-shrink-0"
+              title={propConfig.description}
+              role="img"
+              aria-label="Property description"
+            >
+              <Info className="w-4 h-4" />
+            </div>
+          )}
         </div>
 
-        {propConfig.description && (
-          <p className="text-xs text-muted-foreground leading-relaxed" id={`${inputId}-description`}>
-            {propConfig.description}
-          </p>
-        )}
-
-        {propConfig.type === "string" && (
-          currentValue && typeof currentValue === "string" && currentValue.length > 50 ? (
-            <Textarea
-              id={inputId}
-              value={String(currentValue || "")}
-              onChange={(e) => handlePropChange(propName, e.target.value)}
-              placeholder={`Enter ${propName}...`}
-              className="text-sm min-h-20"
-              aria-describedby={propConfig.description ? `${inputId}-description` : undefined}
-            />
-          ) : (
-            <Input
-              id={inputId}
-              value={String(currentValue || "")}
-              onChange={(e) => handlePropChange(propName, e.target.value)}
-              placeholder={`Enter ${propName}...`}
-              className="text-sm"
-              aria-describedby={propConfig.description ? `${inputId}-description` : undefined}
-            />
-          )
-        )}
-
-        {propConfig.type === "select" && propConfig.options && (
-          <Select
-            value={String(currentValue || "__not_set__")}
-            onValueChange={(value) => handlePropChange(propName, value === "__not_set__" ? undefined : value)}
-          >
-            <SelectTrigger className="text-sm" aria-describedby={propConfig.description ? `${inputId}-description` : undefined}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__not_set__" className="text-sm italic text-muted-foreground">
-                Not set
-              </SelectItem>
-              {propConfig.options.map((option: string) => (
-                <SelectItem key={option} value={option || "__empty__"} className="text-sm">
-                  {option || "(empty)"}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-
-        {propConfig.type === "boolean" && (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Switch
+        {/* Property Input */}
+        <div className="space-y-3">
+          {propConfig.type === "string" && (
+            currentValue && typeof currentValue === "string" && currentValue.length > 50 ? (
+              <Textarea
                 id={inputId}
-                checked={Boolean(currentValue || false)}
-                onCheckedChange={(checked) => handlePropChange(propName, checked)}
+                value={String(currentValue || "")}
+                onChange={(e) => handlePropChange(propName, e.target.value)}
+                placeholder={`Enter ${propName}...`}
+                className="text-sm min-h-20 resize-none border-0 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring rounded-lg transition-all"
                 aria-describedby={propConfig.description ? `${inputId}-description` : undefined}
               />
-              <Label htmlFor={inputId} className="text-sm">
-                {currentValue ? "Enabled" : "Disabled"}
-              </Label>
-            </div>
-          </div>
-        )}
+            ) : (
+              <Input
+                id={inputId}
+                value={String(currentValue || "")}
+                onChange={(e) => handlePropChange(propName, e.target.value)}
+                placeholder={`Enter ${propName}...`}
+                className="text-sm border-0 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring rounded-lg transition-all"
+                aria-describedby={propConfig.description ? `${inputId}-description` : undefined}
+              />
+            )
+          )}
 
-        {isModified && (
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>Default: {String(defaultValue)}</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handlePropChange(propName, defaultValue ?? "")}
-              className="h-auto p-1 text-xs"
-              aria-label={`Reset ${propName} to default value`}
+          {propConfig.type === "select" && propConfig.options && (
+            <Select
+              value={String(currentValue || "__not_set__")}
+              onValueChange={(value) => handlePropChange(propName, value === "__not_set__" ? undefined : value)}
             >
-              Reset
-            </Button>
-          </div>
-        )}
+              <SelectTrigger className="text-sm border-0 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring rounded-lg transition-all" aria-describedby={propConfig.description ? `${inputId}-description` : undefined}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__not_set__" className="text-sm text-muted-foreground/60 italic">
+                  Not set
+                </SelectItem>
+                {propConfig.options.map((option: string) => (
+                  <SelectItem key={option} value={option || "__empty__"} className="text-sm">
+                    {option || "(empty)"}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          {propConfig.type === "boolean" && (
+            <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <Switch
+                  id={inputId}
+                  checked={Boolean(currentValue || false)}
+                  onCheckedChange={(checked) => handlePropChange(propName, checked)}
+                  aria-describedby={propConfig.description ? `${inputId}-description` : undefined}
+                />
+                <Label htmlFor={inputId} className="text-sm font-medium">
+                  {currentValue ? "Enabled" : "Disabled"}
+                </Label>
+              </div>
+            </div>
+          )}
+
+          {/* Reset/Default Display */}
+          {isModified && (
+            <div className="flex items-center justify-between text-xs pt-2">
+              <span className="text-muted-foreground/50">
+                Default: <code className="px-1.5 py-0.5 bg-muted/50 rounded text-xs">{String(defaultValue)}</code>
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handlePropChange(propName, defaultValue ?? "")}
+                className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                aria-label={`Reset ${propName} to default value`}
+              >
+                Reset
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="p-4 space-y-4" role="region" aria-label="Component properties editor">
-      {/* Component Info */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm" id="component-title">{componentDef.name}</CardTitle>
-            <div className="flex items-center gap-2">
-              <Badge variant={isInstance ? "default" : "secondary"} className="text-xs">
-                {isInstance ? "Instance" : "Preview"}
-              </Badge>
-              {hasModifiedProps && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleResetProps}
-                  className="h-6 w-6 p-0"
-                  aria-label="Reset all properties to defaults"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                </Button>
-              )}
-            </div>
+    <div className="h-full flex flex-col bg-background" role="region" aria-label="Component properties editor">
+      {/* Component Header */}
+      <div className="px-6 py-5 border-b border-border/50">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg font-semibold text-foreground truncate" id="component-title">
+              {componentDef.name}
+            </h2>
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed" id="component-description">
-            {componentDef.description}
-          </p>
-        </CardHeader>
-      </Card>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Badge 
+              variant={isInstance ? "default" : "secondary"} 
+              className="text-xs h-6 px-2.5 font-medium"
+            >
+              {isInstance ? "Instance" : "Preview"}
+            </Badge>
+            {(hasModifiedProps || hasModifiedA11yProps) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleResetProps}
+                className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground rounded-md"
+                aria-label="Reset all properties to defaults"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </Button>
+            )}
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground/70 leading-relaxed" id="component-description">
+          {componentDef.description}
+        </p>
+      </div>
 
       {/* Tabbed Properties */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="properties" className="relative">
-            Properties
-            {hasModifiedProps && (
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full" aria-hidden="true" />
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="accessibility" className="relative">
-            Accessibility
-            {hasModifiedA11yProps && (
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full" aria-hidden="true" />
-            )}
-          </TabsTrigger>
-        </TabsList>
+      <div className="flex-1 flex flex-col min-h-0">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+          <div className="px-6 pt-4 pb-2">
+            <TabsList className="grid w-full grid-cols-2 h-10 bg-muted/40 p-1 rounded-lg">
+              <TabsTrigger 
+                value="properties" 
+                className="relative text-sm font-medium h-8 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all"
+              >
+                Properties
+                {hasModifiedProps && (
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full" aria-hidden="true" />
+                )}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="accessibility" 
+                className="relative text-sm font-medium h-8 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all"
+              >
+                Accessibility
+                {hasModifiedA11yProps && (
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full" aria-hidden="true" />
+                )}
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-        <TabsContent value="properties" className="space-y-4 mt-4">
-          <div className="space-y-4">
-            {Object.entries(componentDef.propTypes).map(([propName, propConfig]) => {
-              const currentValue = currentProps[propName]
-              const defaultValue = componentDef.defaultProps[propName]
-              const isModified = currentValue !== defaultValue
+          <TabsContent value="properties" className="flex-1 flex flex-col min-h-0">
+            <div className="flex-1 px-6 pb-6 space-y-6 overflow-y-auto">
+              {Object.entries(componentDef.propTypes).map(([propName, propConfig]) => {
+                const currentValue = currentProps[propName]
+                const defaultValue = componentDef.defaultProps[propName]
+                const isModified = currentValue !== defaultValue
 
-              return renderPropEditor(propName, propConfig, currentValue, defaultValue, isModified)
-            })}
+                return renderPropEditor(propName, propConfig, currentValue, defaultValue, isModified)
+              })}
 
-            {Object.keys(componentDef.propTypes).length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-muted flex items-center justify-center">
-                  <span className="text-lg" role="img" aria-label="No properties">📝</span>
+              {Object.keys(componentDef.propTypes).length === 0 && (
+                <div className="text-center py-16 text-muted-foreground/50">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted/20 flex items-center justify-center">
+                    <span className="text-2xl">📝</span>
+                  </div>
+                  <p className="text-sm font-medium mb-1">No properties defined</p>
+                  <p className="text-xs text-muted-foreground/60">This component has no configurable properties</p>
                 </div>
-                <p className="text-sm">No properties defined</p>
-                <p className="text-xs">This component has no configurable properties</p>
+              )}
+            </div>
+
+            {/* Preview Mode Footer - Only on Properties Tab */}
+            {!isInstance && (
+              <div className="px-6 py-4 border-t border-border/50 bg-muted/20" role="note">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs">💡</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground/70">
+                    Preview mode — Add this component to the canvas to create a persistent instance
+                  </p>
+                </div>
               </div>
             )}
-          </div>
-        </TabsContent>
+          </TabsContent>
 
-        <TabsContent value="accessibility" className="space-y-4 mt-4">
-          <div className="text-xs text-muted-foreground p-3 bg-muted/50 rounded-lg border">
-            <p className="mb-2 font-medium">WAI-ARIA Properties</p>
-            <p>These properties improve accessibility for users with assistive technologies. Only set values that are appropriate for your component&apos;s purpose and context.</p>
-          </div>
+          <TabsContent value="accessibility" className="flex-1 px-6 pb-6 space-y-8 overflow-y-auto">
+            {/* A11y Info Banner */}
+            <div className="p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-xl border border-blue-200/50 dark:border-blue-800/30">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Info className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
+                    WAI-ARIA Properties
+                  </p>
+                  <p className="text-xs text-blue-700/80 dark:text-blue-200/80 leading-relaxed">
+                    Enhance accessibility for users with assistive technologies. Only set values that are appropriate for your component's purpose and context.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          {/* Common A11y Properties */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide border-b pb-2">
-              Common
-            </h4>
-            {Object.entries(commonA11yProps).map(([propName, propConfig]) => {
-              const currentValue = currentProps[propName]
-              const isModified = currentValue !== undefined && currentValue !== ""
+            {/* Common A11y Properties */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-sm font-semibold text-foreground/90 mb-4 pb-2 border-b border-border/30">
+                  Common
+                </h3>
+                <div className="space-y-6">
+                  {Object.entries(commonA11yProps).map(([propName, propConfig]) => {
+                    const currentValue = currentProps[propName]
+                    const isModified = currentValue !== undefined && currentValue !== ""
 
-              return renderPropEditor(propName, propConfig, currentValue, "", isModified)
-            })}
-          </div>
+                    return renderPropEditor(propName, propConfig, currentValue, "", isModified)
+                  })}
+                </div>
+              </div>
 
-          {/* Interactive A11y Properties */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide border-b pb-2">
-              Interactive Elements
-            </h4>
-            {Object.entries(interactiveA11yProps).map(([propName, propConfig]) => {
-              const currentValue = currentProps[propName]
-              const isModified = currentValue !== undefined && currentValue !== ""
+              {/* Interactive A11y Properties */}
+              <div>
+                <h3 className="text-sm font-semibold text-foreground/90 mb-4 pb-2 border-b border-border/30">
+                  Interactive Elements
+                </h3>
+                <div className="space-y-6">
+                  {Object.entries(interactiveA11yProps).map(([propName, propConfig]) => {
+                    const currentValue = currentProps[propName]
+                    const isModified = currentValue !== undefined && currentValue !== ""
 
-              return renderPropEditor(propName, propConfig, currentValue, "", isModified)
-            })}
-          </div>
+                    return renderPropEditor(propName, propConfig, currentValue, "", isModified)
+                  })}
+                </div>
+              </div>
 
-          {/* Form A11y Properties */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide border-b pb-2">
-              Form Controls
-            </h4>
-            {Object.entries(formA11yProps).map(([propName, propConfig]) => {
-              const currentValue = currentProps[propName]
-              const isModified = currentValue !== undefined && currentValue !== ""
+              {/* Form A11y Properties */}
+              <div>
+                <h3 className="text-sm font-semibold text-foreground/90 mb-4 pb-2 border-b border-border/30">
+                  Form Controls
+                </h3>
+                <div className="space-y-6">
+                  {Object.entries(formA11yProps).map(([propName, propConfig]) => {
+                    const currentValue = currentProps[propName]
+                    const isModified = currentValue !== undefined && currentValue !== ""
 
-              return renderPropEditor(propName, propConfig, currentValue, "", isModified)
-            })}
-          </div>
+                    return renderPropEditor(propName, propConfig, currentValue, "", isModified)
+                  })}
+                </div>
+              </div>
 
-          {/* Live Region A11y Properties */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide border-b pb-2">
-              Live Regions
-            </h4>
-            {Object.entries(liveRegionA11yProps).map(([propName, propConfig]) => {
-              const currentValue = currentProps[propName]
-              const isModified = currentValue !== undefined && currentValue !== ""
+              {/* Live Region A11y Properties */}
+              <div>
+                <h3 className="text-sm font-semibold text-foreground/90 mb-4 pb-2 border-b border-border/30">
+                  Live Regions
+                </h3>
+                <div className="space-y-6">
+                  {Object.entries(liveRegionA11yProps).map(([propName, propConfig]) => {
+                    const currentValue = currentProps[propName]
+                    const isModified = currentValue !== undefined && currentValue !== ""
 
-              return renderPropEditor(propName, propConfig, currentValue, "", isModified)
-            })}
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      {!isInstance && (
-        <div className="mt-6 p-3 bg-muted/50 rounded-lg border" role="note">
-          <p className="text-xs text-muted-foreground">
-            💡 You&apos;re editing the preview. Add this component to the canvas to create a persistent instance.
-          </p>
-        </div>
-      )}
+                    return renderPropEditor(propName, propConfig, currentValue, "", isModified)
+                  })}
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   )
 }
