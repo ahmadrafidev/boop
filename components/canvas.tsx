@@ -15,7 +15,14 @@ import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { AlertCircle, Trash2, Plus } from "lucide-react"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Slider } from "@/components/ui/slider"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { AlertCircle, Trash2, Plus, MoreHorizontal } from "lucide-react"
 import { toast } from "sonner"
 
 interface CanvasProps {
@@ -53,17 +60,32 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
             {String(props.children || "Button")}
           </Button>
         )
-      case "Card":
+
+      case "Alert":
         return (
-          <Card key={instance.id} className={`${baseClasses} w-64`} onClick={onClick}>
-            <CardHeader>
-              <CardTitle className="text-lg">{String(props.title || "Card Title")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{String(props.content || "Card content")}</p>
-            </CardContent>
-          </Card>
+          <Alert key={instance.id} variant={(props.variant as "default" | "destructive") || "default"} className={`${baseClasses} w-80`} onClick={onClick}>
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>{String(props.title || "Alert Title")}</AlertTitle>
+            <AlertDescription>{String(props.description || "Alert description")}</AlertDescription>
+          </Alert>
         )
+
+      case "Avatar":
+        return (
+          <Avatar
+            key={instance.id}
+            className={`${baseClasses} ${
+              props.size === "sm" ? "h-8 w-8" : 
+              props.size === "lg" ? "h-16 w-16" : 
+              "h-10 w-10"
+            }`}
+            onClick={onClick}
+          >
+            {props.src && <AvatarImage src={String(props.src)} />}
+            <AvatarFallback>{String(props.fallback || "JD")}</AvatarFallback>
+          </Avatar>
+        )
+
       case "Badge":
         return (
           <Badge 
@@ -75,7 +97,37 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
             {String(props.children || "Badge")}
           </Badge>
         )
-      case "Input":
+
+      case "Card":
+        return (
+          <Card key={instance.id} className={`${baseClasses} w-64`} onClick={onClick}>
+            <CardHeader>
+              <CardTitle className="text-lg">{String(props.title || "Card Title")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">{String(props.content || "Card content")}</p>
+            </CardContent>
+          </Card>
+        )
+
+      case "Checkbox":
+        return (
+          <div key={instance.id} className={`${baseClasses} flex items-center space-x-2`} onClick={onClick}>
+            <Checkbox
+              id={`checkbox-${instance.id}`}
+              checked={Boolean(props.checked)}
+              disabled={Boolean(props.disabled)}
+            />
+            <Label
+              htmlFor={`checkbox-${instance.id}`}
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {String(props.label || "Checkbox")}
+            </Label>
+          </div>
+        )
+
+      case "Combobox":
         return (
           <div key={instance.id} className={`${baseClasses} w-64 space-y-2`} onClick={onClick}>
             {props.label && (
@@ -83,23 +135,190 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
                 {String(props.label)}
               </Label>
             )}
-            <Input
-              placeholder={String(props.placeholder || "Enter text...")}
-              type={(props.type as "text" | "email" | "password" | "number") || "text"}
-              disabled={Boolean(props.disabled)}
-              className="w-full"
-              readOnly
-            />
+            <Select disabled={Boolean(props.disabled)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={String(props.placeholder || "Select an option...")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="option1">Option 1</SelectItem>
+                <SelectItem value="option2">Option 2</SelectItem>
+                <SelectItem value="option3">Option 3</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         )
-      case "Alert":
+
+      case "Menu":
         return (
-          <Alert key={instance.id} variant={(props.variant as "default" | "destructive") || "default"} className={`${baseClasses} w-80`} onClick={onClick}>
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>{String(props.title || "Alert Title")}</AlertTitle>
-            <AlertDescription>{String(props.description || "Alert description")}</AlertDescription>
-          </Alert>
+          <DropdownMenu key={instance.id}>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className={baseClasses}
+                onClick={onClick}
+                disabled={Boolean(props.disabled)}
+              >
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="ml-2">{String(props.children || "Menu")}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>Action 1</DropdownMenuItem>
+              <DropdownMenuItem>Action 2</DropdownMenuItem>
+              <DropdownMenuItem>Action 3</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )
+
+      case "Modal":
+        return (
+          <Dialog key={instance.id}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="outline"
+                className={baseClasses}
+                onClick={onClick}
+                disabled={Boolean(props.disabled)}
+              >
+                {String(props.children || "Open Modal")}
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{String(props.title || "Modal Title")}</DialogTitle>
+              </DialogHeader>
+              <div className="py-4">
+                <p>{String(props.content || "Modal content goes here.")}</p>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )
+
+      case "Progress":
+        const value = Number(props.value) || 50
+        const max = Number(props.max) || 100
+        const percentage = Math.min((value / max) * 100, 100)
+        return (
+          <div key={instance.id} className={`${baseClasses} w-64 space-y-2`} onClick={onClick}>
+            <Progress value={percentage} className="w-full" />
+            {Boolean(props.showLabel) && (
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{value}</span>
+                <span>{max}</span>
+              </div>
+            )}
+          </div>
+        )
+
+      case "RadioButton":
+        const options = Array.isArray(props.options) ? props.options : ["Option 1", "Option 2", "Option 3"]
+        return (
+          <div key={instance.id} className={`${baseClasses} space-y-3`} onClick={onClick}>
+            {props.label && (
+              <Label className="text-sm font-medium leading-none">
+                {String(props.label)}
+              </Label>
+            )}
+            <RadioGroup 
+              defaultValue={String(props.defaultValue || options[0])}
+              disabled={Boolean(props.disabled)}
+            >
+              {options.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <RadioGroupItem value={option} id={`radio-${instance.id}-${index}`} />
+                  <Label htmlFor={`radio-${instance.id}-${index}`}>{option}</Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
+        )
+
+      case "Separator":
+        return (
+          <Separator
+            key={instance.id}
+            orientation={(props.orientation as "horizontal" | "vertical") || "horizontal"}
+            className={`${baseClasses} ${props.orientation === "vertical" ? "h-20" : "w-64"}`}
+            onClick={onClick}
+          />
+        )
+
+      case "Slider":
+        const sliderValue = Number(props.value) || 50
+        const sliderMin = Number(props.min) || 0
+        const sliderMax = Number(props.max) || 100
+        const step = Number(props.step) || 1
+        return (
+          <div key={instance.id} className={`${baseClasses} w-64 space-y-3`} onClick={onClick}>
+            {props.label && (
+              <Label className="text-sm font-medium leading-none">
+                {String(props.label)}
+              </Label>
+            )}
+            <div className="space-y-2">
+              <Slider
+                value={[sliderValue]}
+                min={sliderMin}
+                max={sliderMax}
+                step={step}
+                disabled={Boolean(props.disabled)}
+                className="w-full"
+              />
+              {Boolean(props.showValue) && (
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>{sliderMin}</span>
+                  <span className="font-medium">{sliderValue}</span>
+                  <span>{sliderMax}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )
+
+      case "Switch":
+        return (
+          <div key={instance.id} className={`${baseClasses} flex items-center space-x-2`} onClick={onClick}>
+            <Switch
+              id={`switch-${instance.id}`}
+              checked={Boolean(props.checked)}
+              disabled={Boolean(props.disabled)}
+            />
+            <Label
+              htmlFor={`switch-${instance.id}`}
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {String(props.label || "Switch")}
+            </Label>
+          </div>
+        )
+
+      case "Tabs":
+        const tabs = Array.isArray(props.tabs) && props.tabs.every(tab => 
+          typeof tab === 'object' && tab !== null && 'label' in tab && 'content' in tab
+        ) ? props.tabs as Array<{label: string, content: string}> : [
+          { label: "Tab 1", content: "Content for tab 1" },
+          { label: "Tab 2", content: "Content for tab 2" },
+          { label: "Tab 3", content: "Content for tab 3" }
+        ]
+        return (
+          <Tabs key={instance.id} defaultValue={tabs[0]?.label} className={`${baseClasses} w-80`} onClick={onClick}>
+            <TabsList className="grid w-full grid-cols-3">
+              {tabs.map((tab, index) => (
+                <TabsTrigger key={index} value={tab.label}>
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            {tabs.map((tab, index) => (
+              <TabsContent key={index} value={tab.label} className="mt-4">
+                <div className="p-4 border rounded-lg">
+                  <p className="text-sm">{tab.content}</p>
+                </div>
+              </TabsContent>
+            ))}
+          </Tabs>
+        )
+
       case "Text":
         const textSizeClasses = {
           sm: "text-sm",
@@ -122,78 +341,6 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
           </p>
         )
 
-      case "Checkbox":
-        return (
-          <div key={instance.id} className={`${baseClasses} flex items-center space-x-2`} onClick={onClick}>
-            <Checkbox
-              id={`checkbox-${instance.id}`}
-              checked={Boolean(props.checked)}
-              disabled={Boolean(props.disabled)}
-            />
-            <Label
-              htmlFor={`checkbox-${instance.id}`}
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {String(props.label || "Checkbox")}
-            </Label>
-          </div>
-        )
-      case "Switch":
-        return (
-          <div key={instance.id} className={`${baseClasses} flex items-center space-x-2`} onClick={onClick}>
-            <Switch
-              id={`switch-${instance.id}`}
-              checked={Boolean(props.checked)}
-              disabled={Boolean(props.disabled)}
-            />
-            <Label
-              htmlFor={`switch-${instance.id}`}
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {String(props.label || "Switch")}
-            </Label>
-          </div>
-        )
-      case "Progress":
-        const value = Number(props.value) || 50
-        const max = Number(props.max) || 100
-        const percentage = Math.min((value / max) * 100, 100)
-        return (
-          <div key={instance.id} className={`${baseClasses} w-64 space-y-2`} onClick={onClick}>
-            <Progress value={percentage} className="w-full" />
-            {Boolean(props.showLabel) && (
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>{value}</span>
-                <span>{max}</span>
-              </div>
-            )}
-          </div>
-        )
-      case "Separator":
-        return (
-          <Separator
-            key={instance.id}
-            orientation={(props.orientation as "horizontal" | "vertical") || "horizontal"}
-            className={`${baseClasses} ${props.orientation === "vertical" ? "h-20" : "w-64"}`}
-            onClick={onClick}
-          />
-        )
-      case "Avatar":
-        return (
-          <Avatar
-            key={instance.id}
-            className={`${baseClasses} ${
-              props.size === "sm" ? "h-8 w-8" : 
-              props.size === "lg" ? "h-16 w-16" : 
-              "h-10 w-10"
-            }`}
-            onClick={onClick}
-          >
-            {props.src && <AvatarImage src={String(props.src)} />}
-            <AvatarFallback>{String(props.fallback || "JD")}</AvatarFallback>
-          </Avatar>
-        )
-
       case "Textarea":
         return (
           <Textarea
@@ -206,6 +353,46 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
             readOnly
           />
         )
+
+      case "TextInput":
+        return (
+          <div key={instance.id} className={`${baseClasses} w-64 space-y-2`} onClick={onClick}>
+            {props.label && (
+              <Label className="text-sm font-medium leading-none">
+                {String(props.label)}
+              </Label>
+            )}
+            <Input
+              placeholder={String(props.placeholder || "Enter text...")}
+              type={(props.type as "text" | "email" | "password" | "number") || "text"}
+              disabled={Boolean(props.disabled)}
+              className="w-full"
+              readOnly
+            />
+          </div>
+        )
+
+      case "Tooltip":
+        return (
+          <TooltipProvider key={instance.id}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline"
+                  className={baseClasses}
+                  onClick={onClick}
+                  disabled={Boolean(props.disabled)}
+                >
+                  {String(props.children || "Hover me")}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{String(props.content || "Tooltip content")}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )
+
       default:
         return (
           <div key={instance.id} className={`${baseClasses} p-4 border rounded bg-muted`} onClick={onClick}>
@@ -238,7 +425,6 @@ export function Canvas({
   const [isDragOver, setIsDragOver] = useState(false)
   const [isClientMounted, setIsClientMounted] = useState(false)
   
-  // Ensure we're on the client side and properly hydrated
   useEffect(() => {
     setIsClientMounted(true)
   }, [])

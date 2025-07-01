@@ -61,7 +61,7 @@ const componentDefinitions: ComponentDefinition[] = [
   {
     type: "Card",
     name: "Card",
-    icon: "CreditCard",
+    icon: "Square",
     description: "A flexible container for grouping and displaying content in a clear, concise format",
     defaultProps: {
       title: "Card Title",
@@ -94,7 +94,7 @@ const componentDefinitions: ComponentDefinition[] = [
   {
     type: "Input",
     name: "Input",
-    icon: "TextCursorInput",
+    icon: "Edit",
     description: "Text input field for collecting user data with various input types and states",
     defaultProps: {
       label: "Label",
@@ -177,7 +177,7 @@ const componentDefinitions: ComponentDefinition[] = [
   {
     type: "Progress",
     name: "Progress",
-    icon: "BarChart3",
+    icon: "BarChart",
     description: "Progress bar for showing completion status and loading states",
     defaultProps: {
       value: 50,
@@ -232,6 +232,140 @@ const componentDefinitions: ComponentDefinition[] = [
     propTypes: {
       placeholder: { type: "string" },
       rows: { type: "string" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "Combobox",
+    name: "Combobox",
+    icon: "ChevronDown",
+    description: "Searchable dropdown for selecting from a list of options",
+    defaultProps: {
+      label: "Select Option",
+      placeholder: "Select an option...",
+      disabled: false,
+    },
+    propTypes: {
+      label: { type: "string" },
+      placeholder: { type: "string" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "Menu",
+    name: "Menu",
+    icon: "MoreVertical",
+    description: "Dropdown menu with multiple action items and options",
+    defaultProps: {
+      children: "Menu",
+      disabled: false,
+    },
+    propTypes: {
+      children: { type: "string" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "Modal",
+    name: "Modal",
+    icon: "Square",
+    description: "Dialog modal for displaying content in an overlay window",
+    defaultProps: {
+      children: "Open Modal",
+      title: "Modal Title",
+      content: "Modal content goes here.",
+      disabled: false,
+    },
+    propTypes: {
+      children: { type: "string" },
+      title: { type: "string" },
+      content: { type: "string" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "RadioButton",
+    name: "Radio Group",
+    icon: "Circle",
+    description: "Radio button group for single selection from multiple options",
+    defaultProps: {
+      label: "Choose Option",
+      defaultValue: "Option 1",
+      disabled: false,
+    },
+    propTypes: {
+      label: { type: "string" },
+      defaultValue: { type: "string" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "Slider",
+    name: "Slider",
+    icon: "Sliders",
+    description: "Range slider for selecting numeric values within a specified range",
+    defaultProps: {
+      label: "Value",
+      value: 50,
+      min: 0,
+      max: 100,
+      step: 1,
+      showValue: true,
+      disabled: false,
+    },
+    propTypes: {
+      label: { type: "string" },
+      value: { type: "string" },
+      min: { type: "string" },
+      max: { type: "string" },
+      step: { type: "string" },
+      showValue: { type: "boolean" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "Tabs",
+    name: "Tabs",
+    icon: "Folder",
+    description: "Tabbed interface for organizing content into separate views",
+    defaultProps: {
+      defaultTab: "Tab 1",
+    },
+    propTypes: {
+      defaultTab: { type: "string" },
+    },
+  },
+  {
+    type: "TextInput",
+    name: "Text Input",
+    icon: "Edit3",
+    description: "Single-line text input field with label support",
+    defaultProps: {
+      label: "Label",
+      placeholder: "Enter text...",
+      type: "text",
+      disabled: false,
+    },
+    propTypes: {
+      label: { type: "string" },
+      placeholder: { type: "string" },
+      type: { type: "select", options: ["text", "email", "password", "number"] },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
+    type: "Tooltip",
+    name: "Tooltip",
+    icon: "HelpCircle",
+    description: "Contextual tooltip that appears on hover to provide additional information",
+    defaultProps: {
+      children: "Hover me",
+      content: "Tooltip content",
+      disabled: false,
+    },
+    propTypes: {
+      children: { type: "string" },
+      content: { type: "string" },
       disabled: { type: "boolean" },
     },
   },
@@ -369,7 +503,7 @@ export default function PrototypeDesignTool() {
   const SidebarContent = ({ type }: { type: "left" | "right" }) => (
     type === "left" ? (
       <div className="flex flex-col h-full">
-        <div className="p-4 border-b bg-background">
+        <div className="p-4 border-b bg-background flex-shrink-0">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-medium">Components</h3>
           </div>
@@ -383,20 +517,22 @@ export default function PrototypeDesignTool() {
             />
           </div>
         </div>
-        <ComponentLibrary
-          components={componentDefinitions}
-          searchQuery={searchQuery}
-          selectedComponent={selectedComponent}
-          onSelectComponent={handleComponentSelect}
-          onAddToCanvas={addComponentToCanvas}
-        />
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <ComponentLibrary
+            components={componentDefinitions}
+            searchQuery={searchQuery}
+            selectedComponent={selectedComponent}
+            onSelectComponent={handleComponentSelect}
+            onAddToCanvas={addComponentToCanvas}
+          />
+        </div>
       </div>
     ) : (
       <div className="flex flex-col h-full">
-        <div className="p-4 border-b bg-background">
+        <div className="p-4 border-b bg-background flex-shrink-0">
           <h3 className="text-sm font-medium">Inspector</h3>
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto min-h-0">
           <PropertiesPanel
             componentDef={currentComponentDef}
             instance={selectedInstance}
@@ -485,8 +621,8 @@ export default function PrototypeDesignTool() {
     <div className="h-screen bg-background flex">
       {/* Left Sidebar */}
       {leftPanelOpen && (
-        <div className="w-80 border-r bg-muted/30 flex flex-col">
-          <div className="p-4 border-b bg-background/95 backdrop-blur">
+        <div className="w-80 border-r bg-muted/30 flex flex-col h-screen">
+          <div className="p-4 border-b bg-background/95 backdrop-blur flex-shrink-0">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
@@ -498,13 +634,15 @@ export default function PrototypeDesignTool() {
             </div>
           </div>
 
-          <ComponentLibrary
-            components={componentDefinitions}
-            searchQuery={searchQuery}
-            selectedComponent={selectedComponent}
-            onSelectComponent={handleComponentSelect}
-            onAddToCanvas={addComponentToCanvas}
-          />
+          <div className="flex-1 overflow-y-auto min-h-0">
+            <ComponentLibrary
+              components={componentDefinitions}
+              searchQuery={searchQuery}
+              selectedComponent={selectedComponent}
+              onSelectComponent={handleComponentSelect}
+              onAddToCanvas={addComponentToCanvas}
+            />
+          </div>
         </div>
       )}
 
@@ -551,14 +689,14 @@ export default function PrototypeDesignTool() {
 
       {/* Right Sidebar */}
       {rightPanelOpen && (
-        <div className="w-80 border-l bg-muted/30 flex flex-col">
-          <div className="p-4 border-b bg-background/95 backdrop-blur">
+        <div className="w-80 border-l bg-muted/30 flex flex-col h-screen">
+          <div className="p-4 border-b bg-background/95 backdrop-blur flex-shrink-0">
             <div className="flex items-center justify-between">
               <h3 className="text-base md:text-lg font-semibold">Inspector</h3>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto min-h-0">
             <PropertiesPanel
               componentDef={currentComponentDef}
               instance={selectedInstance}
