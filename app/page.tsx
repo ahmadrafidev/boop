@@ -61,7 +61,7 @@ const componentDefinitions: ComponentDefinition[] = [
   {
     type: "Card",
     name: "Card",
-    icon: "Square",
+    icon: "CreditCard",
     description: "A flexible container for grouping and displaying content in a clear, concise format",
     defaultProps: {
       title: "Card Title",

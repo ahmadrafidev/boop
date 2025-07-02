@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import type { ComponentDefinition } from "@/app/page"
-import { Plus, Square, Tag, Edit, AlertCircle, MousePointer, FileText, CheckSquare, ToggleLeft, BarChart, Minus, User, ChevronDown, MoreVertical, Circle, Sliders, Folder, Edit3, HelpCircle } from "lucide-react"
+import { Plus, Square, Tag, Edit, AlertCircle, MousePointer, FileText, CheckSquare, ToggleLeft, BarChart, Minus, User, ChevronDown, MoreVertical, Circle, Sliders, Folder, Edit3, HelpCircle, CreditCard } from "lucide-react"
 import { toast } from "sonner"
 
 interface ComponentLibraryProps {
@@ -32,6 +32,7 @@ const iconMap = {
   Folder,
   Edit3,
   HelpCircle,
+  CreditCard
 }
 
 export function ComponentLibrary({
