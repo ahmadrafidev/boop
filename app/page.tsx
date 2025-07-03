@@ -710,3 +710,5 @@ export default function PrototypeDesignTool() {
     </div>
   )
 }
+
+PrototypeDesignTool.displayName = "PrototypeDesignTool"

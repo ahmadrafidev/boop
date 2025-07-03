@@ -148,3 +148,5 @@ export function ComponentLibrary({
     </div>
   )
 }
+
+ComponentLibrary.displayName = "ComponentLibrary"

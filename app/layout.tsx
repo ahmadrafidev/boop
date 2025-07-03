@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Boop - UI Component Design Tool",
+  title: "Boop - UI Component Playground",
   description: "Touch, tweak, and perfect your UI components with ease.",
   keywords: ["design", "components", "react", "prototyping", "ui"],
   authors: [{ 

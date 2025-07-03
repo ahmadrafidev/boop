@@ -769,3 +769,5 @@ export function Canvas({
 
   return content
 }
+
+Canvas.displayName = "Canvas"

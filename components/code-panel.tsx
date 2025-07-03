@@ -204,3 +204,5 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
     </div>
   )
 }
+
+CodePanel.displayName = "CodePanel"

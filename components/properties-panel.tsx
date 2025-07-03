@@ -132,7 +132,7 @@ export function PropertiesPanel({
   instance, 
   onUpdateProps,
   previewProps,
-  onPreviewPropsChange 
+  onPreviewPropsChange  
 }: PropertiesPanelProps) {
   const [activeTab, setActiveTab] = useState("properties")
 
@@ -494,3 +494,5 @@ export function PropertiesPanel({
     </div>
   )
 }
+
+PropertiesPanel.displayName = "PropertiesPanel"
