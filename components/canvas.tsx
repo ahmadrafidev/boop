@@ -233,16 +233,6 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
           </div>
         )
 
-      case "Separator":
-        return (
-          <Separator
-            key={instance.id}
-            orientation={(props.orientation as "horizontal" | "vertical") || "horizontal"}
-            className={`${baseClasses} ${props.orientation === "vertical" ? "h-20" : "w-64"}`}
-            onClick={onClick}
-          />
-        )
-
       case "Slider":
         const sliderValue = Number(props.value) || 50
         const sliderMin = Number(props.min) || 0
@@ -339,19 +329,6 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
           >
             {String(props.children || "Sample text")}
           </p>
-        )
-
-      case "Textarea":
-        return (
-          <Textarea
-            key={instance.id}
-            placeholder={String(props.placeholder || "Enter your message...")}
-            rows={Number(props.rows) || 3}
-            disabled={Boolean(props.disabled)}
-            className={`${baseClasses} w-64 resize-none`}
-            onClick={onClick}
-            readOnly
-          />
         )
 
       case "TextInput":

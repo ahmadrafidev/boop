@@ -37,6 +37,55 @@ export interface ComponentDefinition {
 
 const componentDefinitions: ComponentDefinition[] = [
   {
+    type: "Alert",
+    name: "Alert",
+    icon: "AlertCircle",
+    description: "Display important messages and notifications to users with different severity levels",
+    defaultProps: {
+      title: "Alert Title",
+      description: "This is an alert description",
+      variant: "default",
+    },
+    propTypes: {
+      title: { type: "string" },
+      description: { type: "string" },
+      variant: { type: "select", options: ["default", "destructive"] },
+    },
+  },
+  {
+    type: "Avatar",
+    name: "Avatar",
+    icon: "User",
+    description: "User profile image or initials display component",
+    defaultProps: {
+      src: "",
+      fallback: "JD",
+      size: "default",
+    },
+    propTypes: {
+      src: { type: "string" },
+      fallback: { type: "string" },
+      size: { type: "select", options: ["sm", "default", "lg"] },
+    },
+  },
+  {
+    type: "Badge",
+    name: "Badge",
+    icon: "Tag",
+    description: "Small status descriptors for UI elements, perfect for labels and indicators",
+    defaultProps: {
+      children: "Badge",
+      variant: "default",
+    },
+    propTypes: {
+      children: { type: "string" },
+      variant: {
+        type: "select",
+        options: ["default", "secondary", "destructive", "outline"],
+      },
+    },
+  },
+  {
     type: "Button",
     name: "Button",
     icon: "MousePointer",
@@ -75,74 +124,6 @@ const componentDefinitions: ComponentDefinition[] = [
     },
   },
   {
-    type: "Badge",
-    name: "Badge",
-    icon: "Tag",
-    description: "Small status descriptors for UI elements, perfect for labels and indicators",
-    defaultProps: {
-      children: "Badge",
-      variant: "default",
-    },
-    propTypes: {
-      children: { type: "string" },
-      variant: {
-        type: "select",
-        options: ["default", "secondary", "destructive", "outline"],
-      },
-    },
-  },
-  {
-    type: "Input",
-    name: "Input",
-    icon: "Edit",
-    description: "Text input field for collecting user data with various input types and states",
-    defaultProps: {
-      label: "Label",
-      placeholder: "Enter text...",
-      type: "text",
-      disabled: false,
-    },
-    propTypes: {
-      label: { type: "string" },
-      placeholder: { type: "string" },
-      type: { type: "select", options: ["text", "email", "password", "number"] },
-      disabled: { type: "boolean" },
-    },
-  },
-  {
-    type: "Alert",
-    name: "Alert",
-    icon: "AlertCircle",
-    description: "Display important messages and notifications to users with different severity levels",
-    defaultProps: {
-      title: "Alert Title",
-      description: "This is an alert description",
-      variant: "default",
-    },
-    propTypes: {
-      title: { type: "string" },
-      description: { type: "string" },
-      variant: { type: "select", options: ["default", "destructive"] },
-    },
-  },
-  {
-    type: "Text",
-    name: "Text",
-    icon: "FileText",
-    description: "Basic text element for displaying content with different sizes and styles",
-    defaultProps: {
-      children: "Sample text",
-      size: "default",
-      variant: "default",
-    },
-    propTypes: {
-      children: { type: "string" },
-      size: { type: "select", options: ["sm", "default", "lg", "xl"] },
-      variant: { type: "select", options: ["default", "muted", "destructive"] },
-    },
-  },
-
-  {
     type: "Checkbox",
     name: "Checkbox",
     icon: "CheckSquare",
@@ -155,83 +136,6 @@ const componentDefinitions: ComponentDefinition[] = [
     propTypes: {
       label: { type: "string" },
       checked: { type: "boolean" },
-      disabled: { type: "boolean" },
-    },
-  },
-  {
-    type: "Switch",
-    name: "Switch",
-    icon: "ToggleLeft",
-    description: "Toggle switch for on/off states and settings",
-    defaultProps: {
-      label: "Switch",
-      checked: false,
-      disabled: false,
-    },
-    propTypes: {
-      label: { type: "string" },
-      checked: { type: "boolean" },
-      disabled: { type: "boolean" },
-    },
-  },
-  {
-    type: "Progress",
-    name: "Progress",
-    icon: "BarChart",
-    description: "Progress bar for showing completion status and loading states",
-    defaultProps: {
-      value: 50,
-      max: 100,
-      showLabel: true,
-    },
-    propTypes: {
-      value: { type: "string" },
-      max: { type: "string" },
-      showLabel: { type: "boolean" },
-    },
-  },
-  {
-    type: "Separator",
-    name: "Separator",
-    icon: "Minus",
-    description: "Visual divider for separating content sections",
-    defaultProps: {
-      orientation: "horizontal",
-    },
-    propTypes: {
-      orientation: { type: "select", options: ["horizontal", "vertical"] },
-    },
-  },
-  {
-    type: "Avatar",
-    name: "Avatar",
-    icon: "User",
-    description: "User profile image or initials display component",
-    defaultProps: {
-      src: "",
-      fallback: "JD",
-      size: "default",
-    },
-    propTypes: {
-      src: { type: "string" },
-      fallback: { type: "string" },
-      size: { type: "select", options: ["sm", "default", "lg"] },
-    },
-  },
-
-  {
-    type: "Textarea",
-    name: "Textarea",
-    icon: "FileText",
-    description: "Multi-line text input for longer content and descriptions",
-    defaultProps: {
-      placeholder: "Enter your message...",
-      rows: 3,
-      disabled: false,
-    },
-    propTypes: {
-      placeholder: { type: "string" },
-      rows: { type: "string" },
       disabled: { type: "boolean" },
     },
   },
@@ -284,6 +188,22 @@ const componentDefinitions: ComponentDefinition[] = [
     },
   },
   {
+    type: "Progress",
+    name: "Progress",
+    icon: "BarChart",
+    description: "Progress bar for showing completion status and loading states",
+    defaultProps: {
+      value: 50,
+      max: 100,
+      showLabel: true,
+    },
+    propTypes: {
+      value: { type: "string" },
+      max: { type: "string" },
+      showLabel: { type: "boolean" },
+    },
+  },
+  {
     type: "RadioButton",
     name: "Radio Group",
     icon: "Circle",
@@ -324,6 +244,22 @@ const componentDefinitions: ComponentDefinition[] = [
     },
   },
   {
+    type: "Switch",
+    name: "Switch",
+    icon: "ToggleLeft",
+    description: "Toggle switch for on/off states and settings",
+    defaultProps: {
+      label: "Switch",
+      checked: false,
+      disabled: false,
+    },
+    propTypes: {
+      label: { type: "string" },
+      checked: { type: "boolean" },
+      disabled: { type: "boolean" },
+    },
+  },
+  {
     type: "Tabs",
     name: "Tabs",
     icon: "Folder",
@@ -333,6 +269,22 @@ const componentDefinitions: ComponentDefinition[] = [
     },
     propTypes: {
       defaultTab: { type: "string" },
+    },
+  },
+  {
+    type: "Text",
+    name: "Text",
+    icon: "FileText",
+    description: "Basic text element for displaying content with different sizes and styles",
+    defaultProps: {
+      children: "Sample text",
+      size: "default",
+      variant: "default",
+    },
+    propTypes: {
+      children: { type: "string" },
+      size: { type: "select", options: ["sm", "default", "lg", "xl"] },
+      variant: { type: "select", options: ["default", "muted", "destructive"] },
     },
   },
   {
