@@ -56,7 +56,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Avatar",
     name: "Avatar",
     icon: "User",
-    description: "User profile image or initials display component",
+    description: "A circular component for displaying user profile images with fallback support for initials when no image is available",
     defaultProps: {
       src: "",
       fallback: "JD",
@@ -72,7 +72,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Badge",
     name: "Badge",
     icon: "Tag",
-    description: "Small status descriptors for UI elements, perfect for labels and indicators",
+    description: "A compact component for displaying status, labels, or counts with various visual styles",
     defaultProps: {
       children: "Badge",
       variant: "default",
@@ -89,7 +89,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Button",
     name: "Button",
     icon: "MousePointer",
-    description: "Interact with the component and modify its props using the inspector",
+    description: "A versatile clickable component with multiple variants and sizes for triggering actions or navigation",
     defaultProps: {
       children: "Button",
       variant: "default",
@@ -111,7 +111,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Card",
     name: "Card",
     icon: "CreditCard",
-    description: "A flexible container for grouping and displaying content in a clear, concise format",
+    description: "A container component for organizing related content with optional header, footer, and content sections",
     defaultProps: {
       title: "Card Title",
       content: "Card content goes here",
@@ -127,7 +127,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Checkbox",
     name: "Checkbox",
     icon: "CheckSquare",
-    description: "Checkbox input for boolean selections and toggles",
+    description: "An interactive form control for binary choices or multiple selections with support for indeterminate state",
     defaultProps: {
       label: "Checkbox",
       checked: false,
@@ -159,7 +159,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Menu",
     name: "Menu",
     icon: "MoreVertical",
-    description: "Dropdown menu with multiple action items and options",
+    description: "A contextual menu component that displays a list of actions or options when triggered",
     defaultProps: {
       children: "Menu",
       disabled: false,
@@ -173,7 +173,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Modal",
     name: "Modal",
     icon: "Square",
-    description: "Dialog modal for displaying content in an overlay window",
+    description: "A dialog component that creates a focused overlay window for important content or user interactions",
     defaultProps: {
       children: "Open Modal",
       title: "Modal Title",
@@ -191,7 +191,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Progress",
     name: "Progress",
     icon: "BarChart",
-    description: "Progress bar for showing completion status and loading states",
+    description: "A visual indicator for displaying the progress or completion status of an operation with optional label",
     defaultProps: {
       value: 50,
       max: 100,
@@ -207,7 +207,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "RadioButton",
     name: "Radio Group",
     icon: "Circle",
-    description: "Radio button group for single selection from multiple options",
+    description: "A form control for selecting a single option from a list of mutually exclusive choices",
     defaultProps: {
       label: "Choose Option",
       defaultValue: "Option 1",
@@ -223,7 +223,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Slider",
     name: "Slider",
     icon: "Sliders",
-    description: "Range slider for selecting numeric values within a specified range",
+    description: "An interactive component for selecting a numeric value within a specified range with optional step intervals",
     defaultProps: {
       label: "Value",
       value: 50,
@@ -247,7 +247,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Switch",
     name: "Switch",
     icon: "ToggleLeft",
-    description: "Toggle switch for on/off states and settings",
+    description: "A toggle component for switching between two states with a sliding animation effect",
     defaultProps: {
       label: "Switch",
       checked: false,
@@ -263,7 +263,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Tabs",
     name: "Tabs",
     icon: "Folder",
-    description: "Tabbed interface for organizing content into separate views",
+    description: "A navigation component for organizing and switching between related sections of content",
     defaultProps: {
       defaultTab: "Tab 1",
     },
@@ -275,7 +275,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Text",
     name: "Text",
     icon: "FileText",
-    description: "Basic text element for displaying content with different sizes and styles",
+    description: "A typography component for displaying text content with various sizes, weights, and styles",
     defaultProps: {
       children: "Sample text",
       size: "default",
@@ -291,7 +291,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "TextInput",
     name: "Text Input",
     icon: "Edit3",
-    description: "Single-line text input field with label support",
+    description: "A form control for collecting single-line text input with support for various input types and validation",
     defaultProps: {
       label: "Label",
       placeholder: "Enter text...",
@@ -309,7 +309,7 @@ const componentDefinitions: ComponentDefinition[] = [
     type: "Tooltip",
     name: "Tooltip",
     icon: "HelpCircle",
-    description: "Contextual tooltip that appears on hover to provide additional information",
+    description: "A floating component that provides additional information or context when hovering over an element",
     defaultProps: {
       children: "Hover me",
       content: "Tooltip content",
