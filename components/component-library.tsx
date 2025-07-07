@@ -62,8 +62,8 @@ export function ComponentLibrary({
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="text-center text-muted-foreground">
           <AlertCircle className="w-8 h-8 mx-auto mb-2" />
-          <p className="text-sm">No components found</p>
-          <p className="text-xs">Try a different search term</p>
+          <h1 className="text-sm md:text-base font-medium text-zinc-800 dark:text-zinc-300">No components found</h1>
+          <p className="text-xs md:text-sm text-zinc-500 dark:text-zinc-400">Try a different search term or add a new component.</p>
         </div>
       </div>
     )
