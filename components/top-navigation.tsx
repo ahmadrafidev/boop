@@ -74,11 +74,11 @@ export function TopNavigation({
         {/* Component Name or Current View */}
         <div className="min-w-0 flex-1">
           {activeView === "component" && selectedComponent ? (
-            <h1 className="text-lg font-semibold truncate">{selectedComponent.name}</h1>
+            <h1 className="text-sm md:text-xl font-bold">{selectedComponent.name}</h1>
           ) : activeView === "canvas" ? (
-            <h1 className="text-lg font-semibold">Canvas</h1>
+            <h1 className="text-sm md:text-xl font-bold">Canvas</h1>
           ) : (
-            <h1 className="text-lg font-semibold">Boop</h1>
+            <h1 className="text-sm md:text-xl font-bold">Boop</h1>
           )}
         </div>
       </div>

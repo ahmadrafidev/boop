@@ -403,9 +403,6 @@ export function Canvas({
   useEffect(() => {
     setIsClientMounted(true)
   }, [])
-  
-  // DEBUG: Log the current state
-  console.log('Canvas render:', { activeView, isClientMounted, canvasComponents: canvasComponents.length })
 
   const handleDragStart = (e: React.DragEvent, instance: ComponentInstance) => {
     e.dataTransfer.setData("application/x-instance-id", instance.id)
