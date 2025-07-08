@@ -547,14 +547,7 @@ export function Canvas({
         <div className="max-w-7xl mx-auto px-6 py-8 space-y-12">
           {/* Preview Section */}
           <section>
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-xl font-semibold mb-2">Preview</h2>
-                <p className="text-sm text-muted-foreground">
-                  Interactive preview of the {selectedComponent.name} component with default props.
-                </p>
-              </div>
-              
+            <div className="container">
               {/* Component Showcase */}
               <div className="relative">
                 <div className="rounded-lg border border-border bg-background p-12 min-h-[300px] flex items-center justify-center">

@@ -528,7 +528,7 @@ export default function PrototypeDesignTool() {
             </div>
 
             {activeView === "component" && (
-              <div className={`flex-shrink-0 ${isCollapsed ? 'h-auto' : 'h-28'}`}>
+              <div className="flex-shrink-0">
                 <CodePanel 
                   component={selectedComponent} 
                   instance={selectedInstance}
@@ -626,7 +626,7 @@ export default function PrototypeDesignTool() {
 
           {/* Code Panel */}
           {activeView === "component" && (
-            <div className={`flex-shrink-0 ${isCollapsed ? 'h-auto' : 'h-36'}`}>
+            <div className="flex-shrink-0">
               <CodePanel 
                 component={selectedComponent} 
                 instance={selectedInstance}

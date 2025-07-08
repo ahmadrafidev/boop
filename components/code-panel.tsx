@@ -3,7 +3,7 @@
 import type { ComponentDefinition, ComponentInstance, ComponentProps } from "@/app/page"
 import { Button } from "@/components/ui/button"
 import { Copy, Check, ChevronDown, ChevronUp } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { toast } from "sonner"
 
 interface CodePanelProps {
@@ -16,6 +16,9 @@ interface CodePanelProps {
 
 export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, previewProps }: CodePanelProps) {
   const [copied, setCopied] = useState(false)
+  const [contentHeight, setContentHeight] = useState(0)
+  const [isScrollable, setIsScrollable] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   if (!component) return null
 
@@ -60,6 +63,52 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
 
   const code = generateCode()
   const lines = code.split("\n")
+
+  // Calculate dynamic height based on content
+  useEffect(() => {
+    if (contentRef.current && !isCollapsed) {
+      const lineHeight = 20 // 1.25rem in pixels (leading-5)
+      const padding = 32 // 2rem total padding (p-4 = 1rem each side)
+      const baseHeight = lines.length * lineHeight + padding
+      
+      // Dynamic height constraints with responsive considerations
+      const isMobile = window.innerWidth < 768
+      const minHeight = Math.max(isMobile ? 60 : 80, baseHeight) // Smaller min height on mobile
+      const maxHeight = Math.min(
+        isMobile ? 200 : 320, // Smaller max height on mobile
+        window.innerHeight * (isMobile ? 0.25 : 0.3) // Less viewport usage on mobile
+      )
+      
+      const finalHeight = Math.min(maxHeight, minHeight)
+      setContentHeight(finalHeight)
+      setIsScrollable(baseHeight > finalHeight)
+    }
+  }, [lines.length, isCollapsed, code])
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (contentRef.current && !isCollapsed) {
+        const lineHeight = 20
+        const padding = 32
+        const baseHeight = lines.length * lineHeight + padding
+        
+        const isMobile = window.innerWidth < 768
+        const minHeight = Math.max(isMobile ? 60 : 80, baseHeight)
+        const maxHeight = Math.min(
+          isMobile ? 200 : 320,
+          window.innerHeight * (isMobile ? 0.25 : 0.3)
+        )
+        
+                 const finalHeight = Math.min(maxHeight, minHeight)
+         setContentHeight(finalHeight)
+         setIsScrollable(baseHeight > finalHeight)
+       }
+     }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [lines.length, isCollapsed])
 
   const copyToClipboard = async () => {
     try {
@@ -136,7 +185,17 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
     return (
       <div className="border-t bg-background">
         <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/50">
-          <h3 className="text-sm font-medium">Code</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-medium">Code</h3>
+            <span className="text-xs text-muted-foreground">
+              {lines.length} line{lines.length !== 1 ? 's' : ''}
+            </span>
+            {isScrollable && !isCollapsed && (
+              <span className="text-xs text-amber-600 dark:text-amber-400">
+                • Scrollable
+              </span>
+            )}
+          </div>
           <Button variant="ghost" size="sm" onClick={onToggleCollapse}>
             <ChevronUp className="w-4 h-4" />
           </Button>
@@ -148,7 +207,17 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
   return (
     <div className="border-t bg-background">
       <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/50 transition-all duration-300 ease-in-out">
-        <h3 className="text-sm font-medium">Code</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-medium">Code</h3>
+          <span className="text-xs text-muted-foreground">
+            {lines.length} line{lines.length !== 1 ? 's' : ''}
+          </span>
+          {isScrollable && !isCollapsed && (
+            <span className="text-xs text-amber-600 dark:text-amber-400">
+              • Scrollable
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-2">
           {!isCollapsed && (
             <Button
@@ -176,15 +245,19 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
       </div>
 
       <div 
-        className={`transition-all duration-400 ease-in-out overflow-hidden ${
+        ref={contentRef}
+        className={`relative transition-all duration-400 ease-in-out overflow-hidden ${
           isCollapsed 
             ? 'h-0 opacity-0 transform translate-y-[-10px]' 
-            : 'h-20 opacity-100 transform translate-y-0'
+            : 'opacity-100 transform translate-y-0'
         }`}
+        style={{ 
+          height: isCollapsed ? '0px' : `${contentHeight}px`
+        }}
       >
-        <div className="h-full p-4 font-mono text-sm bg-muted/30 overflow-x-auto overflow-y-auto transition-all duration-300 ease-in-out">
+        <div className={`h-full p-4 font-mono text-sm bg-muted/30 overflow-x-auto overflow-y-auto transition-all duration-300 ease-in-out ${isScrollable ? 'scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border' : ''}`}>
           <div className="flex h-full">
-            <div className="text-muted-foreground pr-4 select-none text-right min-w-[2rem]">
+            <div className="text-muted-foreground pr-4 select-none text-right min-w-[2rem] flex-shrink-0">
               {lines.map((_, index) => (
                 <div key={index} className="leading-5 transition-opacity duration-300 ease-in-out">
                   {index + 1}
@@ -199,6 +272,10 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
               ))}
             </div>
           </div>
+          {/* Scroll fade indicator */}
+          {isScrollable && (
+            <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-muted/30 to-transparent pointer-events-none" />
+          )}
         </div>
       </div>
     </div>
