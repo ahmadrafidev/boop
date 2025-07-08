@@ -24,7 +24,7 @@ import { AlertCircle, Trash2, Plus, MoreHorizontal } from "lucide-react"
 import { toast } from "sonner"
 
 interface CanvasProps {
-  activeView: "component" | "canvas"
+  activeView: "documentation" | "canvas"
   selectedComponent: ComponentDefinition | null
   selectedInstance: ComponentInstance | null
   canvasComponents: ComponentInstance[]
@@ -507,7 +507,7 @@ export function Canvas({
 
   let content: React.ReactNode
 
-  if (activeView === "component" && selectedComponent) {
+  if (activeView === "documentation" && selectedComponent) {
     // Component preview mode 
     content = (
       <div className="flex-1 bg-background overflow-auto">

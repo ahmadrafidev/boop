@@ -8,14 +8,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Component, Layout, PanelLeft, PanelRight, Moon, Sun, Monitor, Check } from "lucide-react"
+import { FileText, Layout, PanelLeft, PanelRight, Moon, Sun, Monitor, Check } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useIsMobile } from "@/hooks/use-mobile"
 import type { ComponentDefinition } from "@/app/page"
 
 interface TopNavigationProps {
-  activeView: "component" | "canvas"
-  onViewChange: (view: "component" | "canvas") => void
+  activeView: "documentation" | "canvas"
+  onViewChange: (view: "documentation" | "canvas") => void
   selectedComponent: ComponentDefinition | null
   leftPanelOpen: boolean
   rightPanelOpen: boolean
@@ -73,7 +73,7 @@ export function TopNavigation({
 
         {/* Component Name or Current View */}
         <div className="min-w-0 flex-1">
-          {activeView === "component" && selectedComponent ? (
+          {activeView === "documentation" && selectedComponent ? (
             <h1 className="text-sm md:text-xl font-bold">{selectedComponent.name}</h1>
           ) : activeView === "canvas" ? (
             <h1 className="text-sm md:text-xl font-bold">Canvas</h1>
@@ -84,13 +84,13 @@ export function TopNavigation({
       </div>
 
       {/* Right Side */}
-      <div className="flex items-center space-x-2 md:space-x-4">
+      <div className="flex items-center space-x-2">
         {/* View Tabs */}
-        <Tabs value={activeView} onValueChange={(value) => onViewChange(value as "component" | "canvas")}>
+        <Tabs value={activeView} onValueChange={(value) => onViewChange(value as "documentation" | "canvas")}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="component" className="flex items-center gap-2 text-xs md:text-sm">
-              <Component className="w-4 h-4" />
-              <span className="hidden sm:inline">Component</span>
+            <TabsTrigger value="documentation" className="flex items-center gap-2 text-xs md:text-sm">
+              <FileText className="w-4 h-4" />
+              <span className="hidden sm:inline">Documentation</span>
             </TabsTrigger>
             <TabsTrigger value="canvas" className="flex items-center gap-2 text-xs md:text-sm">
               <Layout className="w-4 h-4" />

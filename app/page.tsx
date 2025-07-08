@@ -324,7 +324,7 @@ const componentDefinitions: ComponentDefinition[] = [
 ]
 
 export default function PrototypeDesignTool() {
-  const [activeView, setActiveView] = useState<"component" | "canvas">("component")
+  const [activeView, setActiveView] = useState<"documentation" | "canvas">("documentation")
   const [selectedComponent, setSelectedComponent] = useState<ComponentDefinition | null>(componentDefinitions[0])
   const [selectedInstance, setSelectedInstance] = useState<ComponentInstance | null>(null)
   const [canvasComponents, setCanvasComponents] = useState<ComponentInstance[]>([])
@@ -350,7 +350,7 @@ export default function PrototypeDesignTool() {
     
     setLeftPanelOpen(savedLeftPanel !== null ? JSON.parse(savedLeftPanel) : true)
     setRightPanelOpen(savedRightPanel !== null ? JSON.parse(savedRightPanel) : true)
-    setActiveView(savedActiveView !== null ? JSON.parse(savedActiveView) : "component")
+    setActiveView(savedActiveView !== null ? JSON.parse(savedActiveView) : "documentation")
     
     if (savedCanvasComponents) {
       try {
@@ -527,7 +527,7 @@ export default function PrototypeDesignTool() {
               />
             </div>
 
-            {activeView === "component" && (
+            {activeView === "documentation" && (
               <div className="flex-shrink-0">
                 <CodePanel 
                   component={selectedComponent} 
@@ -625,7 +625,7 @@ export default function PrototypeDesignTool() {
             />
 
           {/* Code Panel */}
-          {activeView === "component" && (
+          {activeView === "documentation" && (
             <div className="flex-shrink-0">
               <CodePanel 
                 component={selectedComponent} 
