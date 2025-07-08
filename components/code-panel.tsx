@@ -20,11 +20,11 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
   const [isScrollable, setIsScrollable] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
 
-  if (!component) return null
-
-  const props = instance?.props || previewProps || component.defaultProps
-
   const generateCode = () => {
+    if (!component) return ""
+    
+    const props = instance?.props || previewProps || component.defaultProps
+
     const allProps = Object.entries(props).filter(([, value]) => {
       return value !== undefined && value !== null && value !== ""
     })
@@ -66,7 +66,7 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
 
   // Calculate dynamic height based on content
   useEffect(() => {
-    if (contentRef.current && !isCollapsed) {
+    if (contentRef.current && !isCollapsed && component) {
       const lineHeight = 20 // 1.25rem in pixels (leading-5)
       const padding = 32 // 2rem total padding (p-4 = 1rem each side)
       const baseHeight = lines.length * lineHeight + padding
@@ -83,12 +83,12 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
       setContentHeight(finalHeight)
       setIsScrollable(baseHeight > finalHeight)
     }
-  }, [lines.length, isCollapsed, code])
+  }, [lines.length, isCollapsed, code, component])
 
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      if (contentRef.current && !isCollapsed) {
+      if (contentRef.current && !isCollapsed && component) {
         const lineHeight = 20
         const padding = 32
         const baseHeight = lines.length * lineHeight + padding
@@ -100,15 +100,18 @@ export function CodePanel({ component, instance, isCollapsed, onToggleCollapse, 
           window.innerHeight * (isMobile ? 0.25 : 0.3)
         )
         
-                 const finalHeight = Math.min(maxHeight, minHeight)
-         setContentHeight(finalHeight)
-         setIsScrollable(baseHeight > finalHeight)
-       }
-     }
+        const finalHeight = Math.min(maxHeight, minHeight)
+        setContentHeight(finalHeight)
+        setIsScrollable(baseHeight > finalHeight)
+      }
+    }
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [lines.length, isCollapsed])
+  }, [lines.length, isCollapsed, component])
+
+  // Early return after all hooks
+  if (!component) return null
 
   const copyToClipboard = async () => {
     try {
