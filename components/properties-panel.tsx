@@ -1,6 +1,6 @@
 "use client"
 
-import type { ComponentDefinition, ComponentInstance, ComponentProps } from "@/app/page"
+import type { ComponentDefinition, ComponentInstance, ComponentProps } from "@/components/library/types"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"

@@ -4,13 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import type { ComponentInstance } from '../types'
 
-interface AlertRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function AlertRenderer({ instance, isSelected, onClick }: AlertRendererProps) {
+export function AlertRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${

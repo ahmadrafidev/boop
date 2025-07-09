@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import type { ComponentDefinition } from "@/app/page"
+import type { ComponentDefinition } from "@/components/library/types"
 import { Plus, Square, Tag, Edit, AlertCircle, MousePointer, FileText, CheckSquare, ToggleLeft, BarChart, Minus, User, ChevronDown, MoreVertical, Circle, Sliders, Folder, Edit3, HelpCircle, CreditCard } from "lucide-react"
 import { toast } from "sonner"
 

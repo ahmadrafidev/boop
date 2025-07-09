@@ -54,7 +54,7 @@ export function CardDocumentation() {
                       <p className="text-xs text-muted-foreground">Standard card style</p>
                     </CardContent>
                   </Card>
-                  <Card variant="outline" className="w-48">
+                  <Card className="w-48 border-2">
                     <CardHeader>
                       <CardTitle className="text-sm">Outline</CardTitle>
                     </CardHeader>
@@ -90,19 +90,12 @@ export function CardDocumentation() {
                 
                 <div className="p-3 border rounded-lg">
                   <div className="flex items-center justify-between mb-1">
-                    <code className="text-sm font-mono">variant</code>
-                    <Badge variant="outline">select</Badge>
+                    <code className="text-sm font-mono">description</code>
+                    <Badge variant="outline">string</Badge>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    The visual style variant of the card. Default: "default"
+                  <p className="text-xs text-muted-foreground">
+                    Optional description text displayed in the card header below the title.
                   </p>
-                  <div className="flex flex-wrap gap-1">
-                    {["default", "outline"].map((variant) => (
-                      <Badge key={variant} variant="secondary" className="text-xs">
-                        {variant}
-                      </Badge>
-                    ))}
-                  </div>
                 </div>
               </div>
             </TabsContent>

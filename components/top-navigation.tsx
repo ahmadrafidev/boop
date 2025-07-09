@@ -11,7 +11,7 @@ import {
 import { FileText, Layout, PanelLeft, PanelRight, Moon, Sun, Monitor, Check } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useIsMobile } from "@/hooks/use-mobile"
-import type { ComponentDefinition } from "@/app/page"
+import type { ComponentDefinition } from "@/components/library/types"
 
 interface TopNavigationProps {
   activeView: "documentation" | "canvas"

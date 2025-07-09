@@ -3,13 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { ComponentInstance } from '../types'
 
-interface AvatarRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function AvatarRenderer({ instance, isSelected, onClick }: AvatarRendererProps) {
+export function AvatarRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${

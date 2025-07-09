@@ -1,6 +1,6 @@
 "use client"
 
-import type { ComponentDefinition, ComponentInstance, ComponentProps } from "@/app/page"
+import type { ComponentDefinition, ComponentInstance, ComponentProps } from "@/components/library/types"
 import { Button } from "@/components/ui/button"
 import { Copy, Check, ChevronDown, ChevronUp } from "lucide-react"
 import { useState, useEffect, useRef } from "react"

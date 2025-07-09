@@ -2,39 +2,42 @@
 
 import type { ComponentInstance } from '../types'
 
-interface TextRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function TextRenderer({ instance, isSelected, onClick }: TextRendererProps) {
+export function TextRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${
     isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:ring-1 hover:ring-border"
   }`
 
-  const textSizeClasses = {
-    sm: "text-sm",
-    default: "text-base",
+  const sizeClasses = {
+    xs: "text-xs",
+    sm: "text-sm", 
+    base: "text-base",
     lg: "text-lg",
-    xl: "text-xl"
-  }
-  
-  const textVariantClasses = {
-    default: "text-foreground",
-    muted: "text-muted-foreground",
-    destructive: "text-destructive"
+    xl: "text-xl",
+    "2xl": "text-2xl",
+    "3xl": "text-3xl",
+    "4xl": "text-4xl"
   }
 
+  const weightClasses = {
+    normal: "font-normal",
+    medium: "font-medium", 
+    semibold: "font-semibold",
+    bold: "font-bold"
+  }
+
+  const Tag = (props.tag as keyof React.JSX.IntrinsicElements) || "p"
+  const sizeClass = sizeClasses[props.size as keyof typeof sizeClasses] || sizeClasses.base
+  const weightClass = weightClasses[props.weight as keyof typeof weightClasses] || weightClasses.normal
+
   return (
-    <p
+    <Tag 
       key={instance.id}
-      className={`${baseClasses} ${textSizeClasses[props.size as keyof typeof textSizeClasses] || textSizeClasses.default} ${textVariantClasses[props.variant as keyof typeof textVariantClasses] || textVariantClasses.default} p-2 rounded`}
+      className={`${baseClasses} ${sizeClass} ${weightClass} p-2 rounded`}
       onClick={onClick}
     >
-      {String(props.children || "Sample text")}
-    </p>
+      {String(props.children || "Text content")}
+    </Tag>
   )
 } 

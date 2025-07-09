@@ -4,13 +4,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import type { ComponentInstance } from '../types'
 
-interface SwitchRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function SwitchRenderer({ instance, isSelected, onClick }: SwitchRendererProps) {
+export function SwitchRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${
@@ -19,15 +13,12 @@ export function SwitchRenderer({ instance, isSelected, onClick }: SwitchRenderer
 
   return (
     <div key={instance.id} className={`${baseClasses} flex items-center space-x-2 p-2 rounded`} onClick={onClick}>
-      <Switch
-        id={`switch-${instance.id}`}
+      <Switch 
+        id={instance.id}
         checked={Boolean(props.checked)}
         disabled={Boolean(props.disabled)}
       />
-      <Label
-        htmlFor={`switch-${instance.id}`}
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-      >
+      <Label htmlFor={instance.id}>
         {String(props.label || "Switch")}
       </Label>
     </div>

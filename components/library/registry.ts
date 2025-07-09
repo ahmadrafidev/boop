@@ -1,4 +1,5 @@
-import type { ComponentConfig, ComponentDefinition, ComponentRenderer, ComponentPropsPanel, ComponentDocumentation } from './types'
+import type { ComponentConfig, ComponentDefinition, ComponentPropsPanelProps, ComponentInstance } from './types'
+import type React from 'react'
 
 import { alertConfig } from './alert'
 import { avatarConfig } from './avatar'
@@ -46,17 +47,17 @@ export function getComponentConfig(type: string): ComponentConfig | undefined {
   return COMPONENT_REGISTRY[type]
 }
 
-export function getComponentRenderer(type: string): ComponentRenderer | undefined {
+export function getComponentRenderer(type: string): ((instance: ComponentInstance, isSelected: boolean, onClick: () => void) => React.ReactElement) | undefined {
   const config = COMPONENT_REGISTRY[type]
   return config?.render
 }
 
-export function getComponentPropsPanel(type: string): ComponentPropsPanel | undefined {
+export function getComponentPropsPanel(type: string): React.ComponentType<ComponentPropsPanelProps> | undefined {
   const config = COMPONENT_REGISTRY[type]
   return config?.PropsPanel
 }
 
-export function getComponentDocumentation(type: string): ComponentDocumentation | undefined {
+export function getComponentDocumentation(type: string): React.ComponentType | undefined {
   const config = COMPONENT_REGISTRY[type]
   return config?.Documentation
 }

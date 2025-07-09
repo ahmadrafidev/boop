@@ -4,13 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { ComponentInstance } from '../types'
 
-interface TextInputRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function TextInputRenderer({ instance, isSelected, onClick }: TextInputRendererProps) {
+export function TextInputRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${
@@ -18,18 +12,19 @@ export function TextInputRenderer({ instance, isSelected, onClick }: TextInputRe
   }`
 
   return (
-    <div key={instance.id} className={`${baseClasses} w-64 space-y-2 p-2 rounded`} onClick={onClick}>
+    <div key={instance.id} className={`${baseClasses} space-y-2 p-2 rounded`} onClick={onClick}>
       {props.label && (
-        <Label className="text-sm font-medium leading-none">
+        <Label htmlFor={instance.id}>
           {String(props.label)}
         </Label>
       )}
       <Input
-        placeholder={String(props.placeholder || "Enter text...")}
-        type={(props.type as "text" | "email" | "password" | "number") || "text"}
+        id={instance.id}
+        type={(props.type as string) || "text"}
+        placeholder={String(props.placeholder || "")}
         disabled={Boolean(props.disabled)}
+        value={String(props.value || "")}
         className="w-full"
-        readOnly
       />
     </div>
   )

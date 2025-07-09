@@ -1,16 +1,10 @@
 "use client"
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import type { ComponentInstance } from '../types'
 
-interface ModalRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function ModalRenderer({ instance, isSelected, onClick }: ModalRendererProps) {
+export function ModalRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${
@@ -25,16 +19,13 @@ export function ModalRenderer({ instance, isSelected, onClick }: ModalRendererPr
             {String(props.triggerText || "Open Modal")}
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>{String(props.title || "Modal Title")}</DialogTitle>
-            <DialogDescription>
-              {String(props.description || "Modal description goes here")}
-            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <p className="text-sm text-muted-foreground">
-              This is the modal content area where you can place any components or information.
+              {String(props.content || "Modal content goes here.")}
             </p>
           </div>
         </DialogContent>

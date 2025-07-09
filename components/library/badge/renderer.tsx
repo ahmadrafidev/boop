@@ -3,13 +3,7 @@
 import { Badge } from "@/components/ui/badge"
 import type { ComponentInstance } from '../types'
 
-interface BadgeRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function BadgeRenderer({ instance, isSelected, onClick }: BadgeRendererProps) {
+export function BadgeRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${

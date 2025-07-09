@@ -35,15 +35,7 @@ function renderComponent(instance: ComponentInstance, isSelected: boolean, onCli
       )
     }
 
-    // Use the modular renderer
-    return (
-      <Renderer
-        key={instance.id}
-        instance={instance}
-        isSelected={isSelected}
-        onClick={onClick}
-      />
-    )
+    return Renderer(instance, isSelected, onClick)
   } catch (error) {
     console.error(`Error rendering component ${instance.type}:`, error)
     return (

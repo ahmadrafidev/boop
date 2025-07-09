@@ -1,15 +1,9 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { ComponentInstance } from '../types'
 
-interface CardRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function CardRenderer({ instance, isSelected, onClick }: CardRendererProps) {
+export function CardRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${
@@ -17,12 +11,15 @@ export function CardRenderer({ instance, isSelected, onClick }: CardRendererProp
   }`
 
   return (
-    <Card key={instance.id} className={`${baseClasses} w-64`} onClick={onClick}>
+    <Card key={instance.id} className={`${baseClasses} w-80`} onClick={onClick}>
       <CardHeader>
-        <CardTitle className="text-lg">{String(props.title || "Card Title")}</CardTitle>
+        <CardTitle>{String(props.title || "Card Title")}</CardTitle>
+        {props.description && (
+          <CardDescription>{String(props.description)}</CardDescription>
+        )}
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">{String(props.content || "Card content")}</p>
+        <p>{String(props.content || "Card content goes here.")}</p>
       </CardContent>
     </Card>
   )

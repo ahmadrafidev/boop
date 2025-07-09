@@ -4,16 +4,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { ChevronsUpDown, Check } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { Label } from "@/components/ui/label"
 import type { ComponentInstance } from '../types'
 
-interface ComboboxRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function ComboboxRenderer({ instance, isSelected, onClick }: ComboboxRendererProps) {
+export function ComboboxRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${
@@ -28,7 +22,10 @@ export function ComboboxRenderer({ instance, isSelected, onClick }: ComboboxRend
   ]
 
   return (
-    <div key={instance.id} className={`${baseClasses} w-64 p-2 rounded`} onClick={onClick}>
+    <div key={instance.id} className={`${baseClasses} w-64 space-y-2 p-2 rounded`} onClick={onClick}>
+      {props.label && (
+        <Label>{String(props.label)}</Label>
+      )}
       <Popover>
         <PopoverTrigger asChild>
           <Button

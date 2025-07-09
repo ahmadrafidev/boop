@@ -3,13 +3,7 @@
 import { Button } from "@/components/ui/button"
 import type { ComponentInstance } from '../types'
 
-interface ButtonRendererProps {
-  instance: ComponentInstance
-  isSelected: boolean
-  onClick: () => void
-}
-
-export function ButtonRenderer({ instance, isSelected, onClick }: ButtonRendererProps) {
+export function ButtonRenderer(instance: ComponentInstance, isSelected: boolean, onClick: () => void) {
   const { props } = instance
 
   const baseClasses = `cursor-pointer transition-all ${
